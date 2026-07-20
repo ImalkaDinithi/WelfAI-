@@ -53,7 +53,7 @@ const Login = () => {
 
       <div className="flex w-full flex-col justify-center px-6 py-12 sm:px-10 lg:w-[55%] lg:px-20">
         <div className="mx-auto w-full max-w-sm">
-          <h2 className="font-serif text-2xl font-medium text-slate-900">
+          <h2 className="font-serif text-2xl font-medium text-slate-950">
             Welcome back
           </h2>
           <p className="mt-1.5 text-sm text-slate-500">
