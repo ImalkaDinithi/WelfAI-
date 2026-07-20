@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const User = require('../models/User');
+const User = require('../models/user');
 const generateToken = require('../utils/generateToken');
 
 // @desc    Register a new user (applicant by default)
@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // role is intentionally not accepted from req.body here so a caller
-  // can never self-register as admin — applicant is the only public role
+  // can never self-register as admin — applicant is the only public role.
   const user = await User.create({
     fullName,
     nic,
@@ -32,14 +32,11 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json({
-    success: true,
-    data: {
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user._id, user.role),
-    },
+    _id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    role: user.role,
+    token: generateToken(user._id, user.role),
   });
 });
 
@@ -54,7 +51,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error('Please provide email and password');
   }
 
-  // password has select:false on the schema, so it must be explicitly requested
+  // password has select:false on the schema, so it must be explicitly requested.
   const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.matchPassword(password))) {
@@ -68,14 +65,11 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   res.json({
-    success: true,
-    data: {
-      _id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      role: user.role,
-      token: generateToken(user._id, user.role),
-    },
+    _id: user._id,
+    fullName: user.fullName,
+    email: user.email,
+    role: user.role,
+    token: generateToken(user._id, user.role),
   });
 });
 
@@ -83,7 +77,6 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/me
 // @access  Private
 const getMe = asyncHandler(async (req, res) => {
-  // req.user is set by the `protect` middleware
   res.json({
     success: true,
     data: req.user,

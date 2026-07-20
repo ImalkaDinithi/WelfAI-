@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
-const User = require('../models/User');
+const User = require('../models/user');
+const { JWT_SECRET } = require('../utils/generateToken');
 
-// Protect routes - verifies JWT and attaches user to req
+// Protect routes - verifies JWT and attaches a lightweight auth payload to req.user.
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
@@ -12,14 +13,20 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const user = await User.findById(decoded.userId || decoded.id);
 
-      req.user = await User.findById(decoded.id);
-
-      if (!req.user) {
+      if (!user) {
         res.status(401);
         throw new Error('User not found, authorization denied');
       }
+
+      req.user = {
+        userId: user._id.toString(),
+        role: user.role,
+        fullName: user.fullName,
+        email: user.email,
+      };
 
       return next();
     } catch (error) {
@@ -34,7 +41,7 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-// Restrict access to specific roles, e.g. authorize('admin')
+// Restrict access to specific roles, e.g. authorize('admin').
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {

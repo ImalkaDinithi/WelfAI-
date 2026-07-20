@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const { protect, authorize } = require('./middleware/authMiddleware');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Connect to MongoDB
@@ -22,6 +23,18 @@ app.get('/api/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.get(
+  '/api/admin/applications',
+  protect,
+  authorize('admin'),
+  (req, res) => {
+    res.json({
+      success: true,
+      message: 'Admin-only applications endpoint reached',
+      user: req.user,
+    });
+  }
+);
 
 // Error handling (must be last)
 app.use(notFound);

@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 import { loginUser, registerUser } from '../api/authApi';
+import { setAuthToken } from '../api/axiosInstance';
 
 const AuthContext = createContext(null);
 
@@ -7,43 +9,48 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from localStorage on first load
   useEffect(() => {
-    const storedUser = localStorage.getItem('welfai_user');
-    const storedToken = localStorage.getItem('welfai_token');
-    if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
-    }
     setLoading(false);
   }, []);
 
-  const persistSession = (data) => {
-    const { token, ...userData } = data;
-    localStorage.setItem('welfai_token', token);
-    localStorage.setItem('welfai_user', JSON.stringify(userData));
-    setUser(userData);
+  const saveAuth = (token, profile = null) => {
+    if (!token) {
+      setAuthToken(null);
+      setUser(null);
+      return null;
+    }
+
+    setAuthToken(token);
+
+    const decoded = jwtDecode(token);
+    const authUser = {
+      token,
+      userId: decoded.userId || decoded.id,
+      role: decoded.role || 'applicant',
+      ...profile,
+    };
+
+    setUser(authUser);
+    return authUser;
   };
 
   const login = async (credentials) => {
-    const res = await loginUser(credentials);
-    persistSession(res.data);
-    return res.data;
+    const data = await loginUser(credentials);
+    return saveAuth(data.token, data);
   };
 
   const register = async (formData) => {
-    const res = await registerUser(formData);
-    persistSession(res.data);
-    return res.data;
+    const data = await registerUser(formData);
+    return saveAuth(data.token, data);
   };
 
   const logout = () => {
-    localStorage.removeItem('welfai_token');
-    localStorage.removeItem('welfai_user');
+    setAuthToken(null);
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, saveAuth }}>
       {children}
     </AuthContext.Provider>
   );
