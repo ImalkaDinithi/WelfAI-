@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
-const User = require('../models/user');
+const User = require('../models/User');
 const { JWT_SECRET } = require('../utils/generateToken');
 
 // Protect routes - verifies JWT and attaches a lightweight auth payload to req.user.

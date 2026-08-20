@@ -1,0 +1,267 @@
+{
+  "_comment": "This is a representative sample dataset for Sri Lankan Districts, Divisional Secretariat (DS) Divisions, and Grama Niladhari (GN) Divisions for development purposes. Replace with official dataset from data.gov.lk before production use.",
+  "districts": [
+    {
+      "name": "Ampara",
+      "dsDivisions": [
+        { "name": "Ampara", "gnDivisions": ["Ampara Town", "Karangawa", "Namal Thalawa", "Paragahakele", "Uhana West"] },
+        { "name": "Damana", "gnDivisions": ["Damana North", "Damana South", "Divulana", "Hingurana", "Wewagam Pattuwa"] },
+        { "name": "Dehiattakandiya", "gnDivisions": ["Bakmeedeniya", "Dehiattakandiya Town", "Kadupitiya", "Mawanagama", "Sandunpura"] },
+        { "name": "Kalmunai", "gnDivisions": ["Kalmunai Town", "Kalmunai North", "Kalmunai South", "Nintavur Road", "Sainthamaruthu 1"] },
+        { "name": "Mahaoya", "gnDivisions": ["Bedirekka", "Mahaoya Town", "Pollebedda", "Puhulyaya", "Unuwatura Boula"] },
+        { "name": "Sammanthurai", "gnDivisions": ["Karangawa 1", "Mallaitivu East", "Navithanveli", "Sammanthurai Town", "Valathapitiya"] }
+      ]
+    },
+    {
+      "name": "Anuradhapura",
+      "dsDivisions": [
+        { "name": "Anuradhapura", "gnDivisions": ["Abhayagiriya", "Isurumuniya", "New Town East", "New Town West", "Stage I", "Stage II"] },
+        { "name": "Galenbindunuwewa", "gnDivisions": ["Dutuwewa", "Galenbindunuwewa Town", "Hurulu Farm", "Kannattiya", "Upuldeniya"] },
+        { "name": "Kekirawa", "gnDivisions": ["Galkiriyagama", "Kekirawa Town", "Koralae East", "Koralae West", "Maradankadawala"] },
+        { "name": "Medawachchiya", "gnDivisions": ["Kadawat Rambewa", "Kidawarankulama", "Medawachchiya Town", "Puleliya", "Poonewa"] },
+        { "name": "Mihintale", "gnDivisions": ["Kannimaduwa", "Mihintale Town", "Missaka", "Nuwaragam West", "Thammannawa"] },
+        { "name": "Thambuttegama", "gnDivisions": ["Mudungoda", "Pahala Halmillewa", "Rajangayana 1", "Solama", "Thambuttegama Town"] }
+      ]
+    },
+    {
+      "name": "Badulla",
+      "dsDivisions": [
+        { "name": "Badulla", "gnDivisions": ["Badulla Town East", "Badulla Town West", "Hali Ela Road", "Hindagoda", "Kailagoda"] },
+        { "name": "Bandarawela", "gnDivisions": ["Bandarawela Central", "Diyatalawa Town", "Heeloya", "Kumbalwela", "Makulella"] },
+        { "name": "Ella", "gnDivisions": ["Ballaketuwa", "Ella Town", "Kithalella", "Namunukula", "Rathkarawa"] },
+        { "name": "Hali Ela", "gnDivisions": ["Bogoda", "Hali Ela Town", "Kandegedara", "Spring Valley", "Uduwara"] },
+        { "name": "Haputale", "gnDivisions": ["Beragala", "Haputale Town", "Idalgashinna", "Kahagolla", "Liyangahawela"] },
+        { "name": "Mahiyanganaya", "gnDivisions": ["Dambana", "Dehiwagala", "Gillimale", "Mahiyanganaya Town", "Mapakada Wewa"] }
+      ]
+    },
+    {
+      "name": "Batticaloa",
+      "dsDivisions": [
+        { "name": "Batticaloa", "gnDivisions": ["Amirthagali", "Barathipuram", "Koddaimunai", "Puliyanthivu", "Thiraimadu"] },
+        { "name": "Eravur Pattu", "gnDivisions": ["Chenkalady", "Eravur Town", "Eravur 1", "Kaluwankerni", "Savukkady"] },
+        { "name": "Kattankudy", "gnDivisions": ["Kattankudy 1", "Kattankudy 2", "Kattankudy 3", "Kattankudy North", "Kattankudy South"] },
+        { "name": "Koralai Pattu", "gnDivisions": ["Kiran", "Mankerni", "Oddamavadi", "Palamadu", "Valaichchenai"] },
+        { "name": "Manmunai South", "gnDivisions": ["Kaluwanchikudy", "Kurukkalmadam", "Mahiloor", "Onthachimadam", "Pattipalai"] }
+      ]
+    },
+    {
+      "name": "Colombo",
+      "dsDivisions": [
+        { "name": "Colombo", "gnDivisions": ["Bambalapitiya", "Fort", "Kollupitiya", "Mattakkuliya", "Pettah", "Slave Island"] },
+        { "name": "Dehiwala", "gnDivisions": ["Dehiwala East", "Dehiwala West", "Kalubowila", "Kohuwala", "Nedimala"] },
+        { "name": "Homagama", "gnDivisions": ["Diyagama", "Godagama", "Homagama Town", "Meegoda", "Pitipana North", "Pitipana South"] },
+        { "name": "Kaduwela", "gnDivisions": ["Battaramulla", "Kaduwela Town", "Malabe", "Pelawatte", "Thalahena"] },
+        { "name": "Kesbewa", "gnDivisions": ["Borupana", "Honnanthara", "Kesbewa Town", "Piliyandala", "Werahera"] },
+        { "name": "Kolonnawa", "gnDivisions": ["Gotatuwa", "IDH", "Kolonnawa Town", "Kotikawatte", "Wellampitiya"] },
+        { "name": "Maharagama", "gnDivisions": ["Delkanda", "Godigamuwa", "High Level Road", "Maharagama Town", "Navinna", "Pamunuwa"] },
+        { "name": "Moratuwa", "gnDivisions": ["Egoda Derana", "Katubedda", "Koralawella", "Moratuwa Town", "Rawatawatte"] },
+        { "name": "Sri Jayawardenepura Kotte", "gnDivisions": ["Etul Kotte", "Nawala North", "Nawala South", "Nugegoda", "Pitakotte"] },
+        { "name": "Thimbirigasyaya", "gnDivisions": ["Havelock Town", "Kirulapone", "Narahenpita", "Thimbirigasyaya Central", "Torrington"] }
+      ]
+    },
+    {
+      "name": "Galle",
+      "dsDivisions": [
+        { "name": "Galle Four Gravets", "gnDivisions": ["Fort", "Kaluwella", "Magalle", "Unawatuna", "Wakwella"] },
+        { "name": "Ambalangoda", "gnDivisions": ["Ambalangoda Town", "Kandegoda", "Maduwa", "Randombe", "Urawatta"] },
+        { "name": "Baddegama", "gnDivisions": ["Baddegama Town", "Ganegama", "Halpatota", "Majuwana", "Wanduramba"] },
+        { "name": "Bentota", "gnDivisions": ["Aluthgama West", "Bentota Town", "Haburugala", "Induruwa", "Yathramulla"] },
+        { "name": "Elpitiya", "gnDivisions": ["Amugoda", "Avittawa", "Elpitiya Town", "Kahaduwa", "Pitigala"] },
+        { "name": "Hikkaduwa", "gnDivisions": ["Dodanduwa", "Gintota", "Hikkaduwa Town", "Rathgama", "Telwatta"] }
+      ]
+    },
+    {
+      "name": "Gampaha",
+      "dsDivisions": [
+        { "name": "Gampaha", "gnDivisions": ["Aluthgama Bogamuwa", "Asgiriya", "Gampaha Town", "Miriswatta", "Yakkala"] },
+        { "name": "Attanagalla", "gnDivisions": ["Alawala", "Attanagalla Town", "Nittambuwa", "Pasyala", "Veyangoda"] },
+        { "name": "Biyagama", "gnDivisions": ["Biyagama North", "Delgoda", "Kaduwela Bridge", "Kandana", "Mabima", "Yakkala Road"] },
+        { "name": "Divulapitiya", "gnDivisions": ["Badalgama", "Divulapitiya Town", "Dugwalana", "Kotadeniyawa", "Mabodale"] },
+        { "name": "Ja-Ela", "gnDivisions": ["Ekala", "Ja-Ela Town", "Kandana", "Kotuwegoda", "Ragama"] },
+        { "name": "Katana", "gnDivisions": ["Andiambalama", "Katunayake FTZ", "Katunayake Town", "Kimbulapitiya", "Seeduwa"] },
+        { "name": "Kelaniya", "gnDivisions": ["Dalugama", "Hunupitiya", "Kelaniya Town", "Kiribathgoda", "Peliyagoda"] },
+        { "name": "Negombo", "gnDivisions": ["Bolawalana", "Daluwakotuwa", "Katuwapitiya", "Negombo Town", "Periyamulla"] },
+        { "name": "Wattala", "gnDivisions": ["Elakanda", "Hekitta", "Hunupitiya", "Mabole", "Wattala Town"] }
+      ]
+    },
+    {
+      "name": "Hambantota",
+      "dsDivisions": [
+        { "name": "Hambantota", "gnDivisions": ["Ambalantota Road", "Hambantota Port Area", "Hambantota Town", "Siribopura", "Yahangala"] },
+        { "name": "Ambalantota", "gnDivisions": ["Ambalantota Town", "Godawaya", "Nonagama", "Ranna", "Uda Beragama"] },
+        { "name": "Beliatta", "gnDivisions": ["Beliatta Town", "Getamanna", "Nihiluwa", "Puwakdandawa", "Weeraketiya Road"] },
+        { "name": "Tangalle", "gnDivisions": ["Kudawella", "Mawella", "Netolpitiya", "Tangalle Town", "Unakuruwa"] },
+        { "name": "Tissamaharama", "gnDivisions": ["Debarawewa", "Kataragama Road", "Kirinda", "Tissamaharama Town", "Yala Junction"] }
+      ]
+    },
+    {
+      "name": "Jaffna",
+      "dsDivisions": [
+        { "name": "Jaffna", "gnDivisions": ["Chundikuli", "Jaffna Town", "Karakulam", "Nallur", "Passaiyoor"] },
+        { "name": "Chavakachcheri", "gnDivisions": ["Chavakachcheri Town", "Kodikamam", "Kopay", "Navatkuli", "Nunavil"] },
+        { "name": "Karainagar", "gnDivisions": ["Karainagar East", "Karainagar North", "Karainagar South", "Karainagar West"] },
+        { "name": "Kayts", "gnDivisions": ["Allaippiddi", "Analaitivu", "Kayts Town", "Mandaitivu", "Nainativu"] },
+        { "name": "Point Pedro", "gnDivisions": ["Alvai", "Kandarodai", "Point Pedro Town", "Thunnalai", "Vadamarachchi"] },
+        { "name": "Valikakam North", "gnDivisions": ["Chunnakam", "Kankesanthurai", "Keerimalai", "Maviddapuram", "Tellippalai"] }
+      ]
+    },
+    {
+      "name": "Kalutara",
+      "dsDivisions": [
+        { "name": "Kalutara", "gnDivisions": ["Desastra Kalutara", "Kalutara North", "Kalutara South", "Katukurunda", "Nagoda"] },
+        { "name": "Beruwala", "gnDivisions": ["Aluthgama", "Beruwala Town", "China Fort", "Dharga Town", "Paiyagala"] },
+        { "name": "Horana", "gnDivisions": ["Horana Town", "Ingiriya Road", "Munagama", "Pokunuwita", "Poruwadanda"] },
+        { "name": "Mathugama", "gnDivisions": ["Agalawatta", "Baduraliya", "Dodangoda", "Mathugama Town", "Neboda"] },
+        { "name": "Panadura", "gnDivisions": ["Aruggoda", "Bandaragama Road", "Gorakana", "Panadura Town", "Wadduwa"] }
+      ]
+    },
+    {
+      "name": "Kandy",
+      "dsDivisions": [
+        { "name": "Kandy Four Gravets", "gnDivisions": ["Asgiriya", "Bowalawatta", "Kandy Town", "Peradeniya", "Suduhumpola"] },
+        { "name": "Gampola", "gnDivisions": ["Gampola Town", "Kahatapitiya", "Nawalapitiya Road", "Ulapane", "Wlapane"] },
+        { "name": "Kundasale", "gnDivisions": ["Digana", "Galgamuwa", "Kundasale Town", "Menikhinna", "Pallekele"] },
+        { "name": "Katugastota", "gnDivisions": ["Akurana", "Katugastota Town", "Madawala", "Pujapitiya", "Yatinuwara"] },
+        { "name": "Peradeniya", "gnDivisions": ["Hindagala", "Kiribathkumbura", "Peradeniya Campus", "Peradeniya Town", "Sarasaviya"] }
+      ]
+    },
+    {
+      "name": "Kegalle",
+      "dsDivisions": [
+        { "name": "Kegalle", "gnDivisions": ["Bandaranayake Mawatha", "Kegalle Town", "Ranwala", "Tholangamuwa", "Warakapola Road"] },
+        { "name": "Dehiowita", "gnDivisions": ["Dehiowita Town", "Deraniyagala", "Kithulgala", "Noori", "Yatiyantota"] },
+        { "name": "Mawanella", "gnDivisions": ["Aranayaka", "Hingula", "Mawanella Town", "Utuwankanda", "Udugoda"] },
+        { "name": "Rambukkana", "gnDivisions": ["Elephant Orphanage Area", "Pinnawala", "Rambukkana Town", "Walalgoda", "Yatagama"] },
+        { "name": "Warakapola", "gnDivisions": ["Ambepussa", "Danowita", "Tholangamuwa", "Warakapola Town", "Wee Oya"] }
+      ]
+    },
+    {
+      "name": "Kilinochchi",
+      "dsDivisions": [
+        { "name": "Karachchi", "gnDivisions": ["Akkarayan", "Iranaimadu", "Kilinochchi Town", "Knoxville", "Thirunagar"] },
+        { "name": "Kandavalai", "gnDivisions": ["Elephant Pass", "Kandavalai Town", "Korakkeni", "Murasumoddai", "Paranthan"] },
+        { "name": "Pachchilaipalli", "gnDivisions": ["Iyyakachchi", "Mulliyan", "Palai", "Pachchilaipalli Town", "Soranpattu"] },
+        { "name": "Poonakary", "gnDivisions": ["Gawtharimunai", "Kavutharimunai", "Poonakary Town", "Sanguupiddy", "Vannerikkulam"] }
+      ]
+    },
+    {
+      "name": "Kurunegala",
+      "dsDivisions": [
+        { "name": "Kurunegala", "gnDivisions": ["Illuppugedara", "Kurunegala Town", "Malkaduwawa", "Mawatagama Road", "Wewala"] },
+        { "name": "Alawwa", "gnDivisions": ["Alawwa Town", "Boyawalana", "Dambadeniya", "Maharachchimulla", "Narangoda"] },
+        { "name": "Giriulla", "gnDivisions": ["Giriulla Town", "Hamangalla", "Kiriwanapola", "Pannala", "Yakkwila"] },
+        { "name": "Kuliyapitiya", "gnDivisions": ["Assedduma", "Dandagamuwa", "Kuliyapitiya Town", "Kithalawa", "Narangalla"] },
+        { "name": "Maho", "gnDivisions": ["Ambanpola", "Balalla", "Galgamuwa Road", "Maho Town", "Yapahuwa"] },
+        { "name": "Narammala", "gnDivisions": ["Dambadeniya", "Metiyagane", "Nakawatta", "Narammala Town", "Pothuhera"] }
+      ]
+    },
+    {
+      "name": "Mannar",
+      "dsDivisions": [
+        { "name": "Mannar Town", "gnDivisions": ["Erukkalampiddy", "Mannar Fort", "Mannar Town", "Pesalai", "Thalaimannar"] },
+        { "name": "Manthai West", "gnDivisions": ["Adampan", "Illuppaikadavai", "Manthai", "Vellankulam", "Vidataltivu"] },
+        { "name": "Madhu", "gnDivisions": ["Madhu Church Area", "Madhu Road", "Palampiddi", "Pandiyankulam", "Periyamadhu"] },
+        { "name": "Nanattan", "gnDivisions": ["Arippu", "Murunkan", "Nanattan Town", "Razooldeen", "Vankalai"] }
+      ]
+    },
+    {
+      "name": "Matale",
+      "dsDivisions": [
+        { "name": "Matale", "gnDivisions": ["Aluvihare", "Gongawela", "Matale Town", "Mandandawela", "Ukuwela"] },
+        { "name": "Dambulla", "gnDivisions": ["Bullagala", "Dambulla Town", "Inamaluwa", "Kandalama", "Pelwehera"] },
+        { "name": "Galewela", "gnDivisions": ["Bambawa", "Devahuwa", "Galewela Town", "Makulagaswewa", "Pallepola"] },
+        { "name": "Naula", "gnDivisions": ["Kalu Ganga", "Nalanda", "Naula Town", "Elahera Road", "Kongahawela"] },
+        { "name": "Rattota", "gnDivisions": ["Kaikawala", "Laggala Road", "Pitawala", "Rattota Town", "Riverston Area"] }
+      ]
+    },
+    {
+      "name": "Matara",
+      "dsDivisions": [
+        { "name": "Matara Four Gravets", "gnDivisions": ["Fort", "Isadeen Town", "Kotuwegoda", "Nupe", "Uyanwatta"] },
+        { "name": "Akuressa", "gnDivisions": ["Akuressa Town", "Bangama", "Imaduwa Road", "Kananke", "Pitabeddara"] },
+        { "name": "Deniyaya", "gnDivisions": ["Aninkanda", "Deniyaya Town", "Kolawenigama", "Pallegama", "Sinharaja Border"] },
+        { "name": "Dikwella", "gnDivisions": ["Beliatta Road", "Dikwella Town", "Hiriketiya", "Nilwella", "Wewurukannala"] },
+        { "name": "Kamburupitiya", "gnDivisions": ["Kamburupitiya Town", "Karagoda Uyangoda", "Kirinda Puhulwella", "Mapalana", "Narawelpita"] },
+        { "name": "Weligama", "gnDivisions": ["Ahangama Road", "Kapparatota", "Midigama", "Mirissa", "Weligama Town"] }
+      ]
+    },
+    {
+      "name": "Moneragala",
+      "dsDivisions": [
+        { "name": "Moneragala", "gnDivisions": ["Hulandawa", "Kumbukkana", "Moneragala Town", "Muppane", "Sirigala"] },
+        { "name": "Bibile", "gnDivisions": ["Bibile Town", "Dambagalla", "Pitakumbura", "Radaliyadda", "Unagolla"] },
+        { "name": "Kataragama", "gnDivisions": ["Detagamuwa", "Kataragama Sacred City", "Kataragama Town", "Sellakataragama", "Wedasitikanda"] },
+        { "name": "Wellawaya", "gnDivisions": ["Buduruwagala", "Handapanagala", "Kuda Oya", "Randeniya", "Wellawaya Town"] }
+      ]
+    },
+    {
+      "name": "Mullaitivu",
+      "dsDivisions": [
+        { "name": "Maritimepattu", "gnDivisions": ["Alampil", "Kokkilai", "Mullaitivu Town", "Vattapalai", "Vellamullivaikkal"] },
+        { "name": "Manthai East", "gnDivisions": ["Ampalavanpokkanai", "Naddankandal", "Pandiyankulam", "Vangala", "Vinayagapuram"] },
+        { "name": "Oddusuddan", "gnDivisions": ["Kachchilamadu", "Muthuiyankaddu", "Oddusuddan Town", "Periyakulam", "Thandwan"] },
+        { "name": "Puthukkudiyiruppu", "gnDivisions": ["Ananthapuram", "Manthuvil", "Puthukkudiyiruppu Town", "Udayarkaddu", "Visuavamadu"] }
+      ]
+    },
+    {
+      "name": "Nuwara Eliya",
+      "dsDivisions": [
+        { "name": "Nuwara Eliya", "gnDivisions": ["Gregory Lake Area", "Hawa Eliya", "Kandapola", "Nuwara Eliya Town", "Pedro Estate"] },
+        { "name": "Ambagamuwa", "gnDivisions": ["Ginigathena", "Hatton Town", "Kotagala", "Maskeliya", "Norton Bridge"] },
+        { "name": "Hanguranketha", "gnDivisions": ["Hanguranketha Town", "Maturata", "Padiyapelella", "Rikillagaskada", "Udapussellawa"] },
+        { "name": "Kotmale", "gnDivisions": ["Harangala", "Kotmale Dam Site", "Mawathagama", "Pundaluoya", "Ramboda"] },
+        { "name": "Walapane", "gnDivisions": ["Kalaganwatta", "Nildandahinna", "Ragala", "Theripehe", "Walapane Town"] }
+      ]
+    },
+    {
+      "name": "Polonnaruwa",
+      "dsDivisions": [
+        { "name": "Thamankaduwa", "gnDivisions": ["Kaduruwela", "New Town", "Old Town", "Parakrama Samudra Area", "Polonnaruwa Town"] },
+        { "name": "Dimbulagala", "gnDivisions": ["Aralaganwila", "Dimbulagala Town", "Manampitiya", "Onegama", "Weerapura"] },
+        { "name": "Hingurakgoda", "gnDivisions": ["Hingurakgoda Town", "Kaudulla", "Minneriya", "Rajarata Area", "Unagalavehera"] },
+        { "name": "Medirigiriya", "gnDivisions": ["Diyasenpura", "Kaubulla", "Medirigiriya Town", "Meegaswewa", "Viharagala"] }
+      ]
+    },
+    {
+      "name": "Puttalam",
+      "dsDivisions": [
+        { "name": "Puttalam", "gnDivisions": ["Attawillu", "Manalkundru", "Palavi", "Puttalam Town", "Sirambiadi"] },
+        { "name": "Chilaw", "gnDivisions": ["Bangadeniya", "Chilaw Town", "Munneswaram", "Thoduwawa", "Weerahena"] },
+        { "name": "Dankotuwa", "gnDivisions": ["Dankotuwa Town", "Lihiriyagama", "Mawathagama", "Thalahena", "Yogiyana"] },
+        { "name": "Kalpitiya", "gnDivisions": ["Alankuda", "Kandakuliya", "Kalpitiya Fort Area", "Kalpitiya Town", "Mampuri"] },
+        { "name": "Nattandiya", "gnDivisions": ["Dhammissara", "Marawila", "Mudukatuwa", "Nattandiya Town", "Tabbowa"] },
+        { "name": "Wennappuwa", "gnDivisions": ["Boralessa", "Katuneriya", "Lunuwila", "Nainamadama", "Wennappuwa Town"] }
+      ]
+    },
+    {
+      "name": "Ratnapura",
+      "dsDivisions": [
+        { "name": "Ratnapura", "gnDivisions": ["Batugedara", "Hidellana", "Kiriella Road", "Ratnapura Town", "Weralupa"] },
+        { "name": "Balangoda", "gnDivisions": ["Balangoda Town", "Imbulpe", "Kaltota", "Pallebedda", "Pinnawala"] },
+        { "name": "Eheliyagoda", "gnDivisions": ["Eheliyagoda Town", "Mitipola", "Parakaduwa", "Puwakpitiya Road", "Yakdehiwatta"] },
+        { "name": "Embilipitiya", "gnDivisions": ["Chandrikawewa", "Embilipitiya Town", "Katuwana Road", "Middeniya", "Padalangala"] },
+        { "name": "Kuruwita", "gnDivisions": ["Bopath Ella Area", "Delgamuwa", "Erathna", "Kuruwita Town", "Paradise Area"] },
+        { "name": "Pelmadulla", "gnDivisions": ["Ganga Haddara", "Kahawatta", "Lellopitiya", "Opanayaka", "Pelmadulla Town"] }
+      ]
+    },
+    {
+      "name": "Trincomalee",
+      "dsDivisions": [
+        { "name": "Town and Gravets", "gnDivisions": ["China Bay", "Fort Frederick Area", "Orr's Hill", "Periyakulam", "Trincomalee Town"] },
+        { "name": "Kantalai", "gnDivisions": ["Agrabodhi", "Kantalai Town", "Peraru", "Raja Ela", "Wanthamuri"] },
+        { "name": "Kinniya", "gnDivisions": ["Kinniya 1", "Kinniya 2", "Maniru", "Periyattumunai", "Uppuveli"] },
+        { "name": "Kuchchaveli", "gnDivisions": ["Irakkakandi", "Kuchchaveli Town", "Nilaveli", "Pudavaikaddu", "Thiriyai"] },
+        { "name": "Muttur", "gnDivisions": ["Eechchilampattai", "Kottiyar", "Muttur Town", "Pattithanam", "Sampoor"] }
+      ]
+    },
+    {
+      "name": "Vavuniya",
+      "dsDivisions": [
+        { "name": "Vavuniya", "gnDivisions": ["Grand Bazaar", "Pandarikkulam", "Rambaikulam", "Thandikulam", "Vavuniya Town"] },
+        { "name": "Vavuniya North", "gnDivisions": ["Nedunkeni", "Nainamadu", "Olumadu", "Pudukulam", "Semamadu"] },
+        { "name": "Vavuniya South", "gnDivisions": ["Asikulam", "Cheddikulam", "Mahakachchakodiya", "Mamaduwa", "Pavarassankulam"] },
+        { "name": "Vengalacheddikulam", "gnDivisions": ["Cheddikulam Town", "Kannaddi", "Kudiyiruppu", "Menik Farm Area", "Periyamurippu"] }
+      ]
+    }
+  ]
+}
