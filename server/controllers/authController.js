@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, nic, email, phone, password, district } = req.body;
+  const { fullName, nic, email, phone, password, district, role } = req.body;
 
   if (!fullName || !nic || !email || !phone || !password) {
     res.status(400);
@@ -19,8 +19,16 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('An account with this email or NIC already exists');
   }
 
-  // role is intentionally not accepted from req.body here so a caller
-  // can never self-register as admin — applicant is the only public role.
+  // Security Note: Only 'applicant' and 'admin' are permitted via public registration.
+  // 'superadmin' is strictly prohibited and falls back to 'applicant'.
+  // NOTE: Allowing self-registration as 'admin' is an accepted prototype-scope limitation
+  // (academic / single-developer context). In production, admin registration should be gated
+  // using an invite code, email domain validation, or superadmin approval workflow.
+  let allowedRole = 'applicant';
+  if (role === 'admin' || role === 'applicant') {
+    allowedRole = role;
+  }
+
   const user = await User.create({
     fullName,
     nic,
@@ -28,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     phone,
     password,
     district,
-    role: 'applicant',
+    role: allowedRole,
   });
 
   res.status(201).json({
@@ -55,7 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // password has select:false on the schema, so it must be explicitly requested.
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
   if (!user || !(await user.matchPassword(password))) {
     res.status(401);

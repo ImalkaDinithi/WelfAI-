@@ -18,6 +18,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 // Placeholder admin dashboard — replace when building Admin module
 const AdminDashboard = () => <div className="p-8 font-serif text-xl">Admin Dashboard Placeholder</div>;
 
+// Placeholder superadmin dashboard — replace when building Superadmin module
+const SuperAdminDashboard = () => <div className="p-8 font-serif text-xl">Super Admin Dashboard Placeholder</div>;
+
 function App() {
   return (
     <AuthProvider>
@@ -59,6 +62,16 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Super Admin Dashboard Route */}
+          <Route
+            path="/superadmin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <SuperAdminDashboard />
               </ProtectedRoute>
             }
           />

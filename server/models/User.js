@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['applicant', 'admin'],
+      enum: ['applicant', 'admin', 'superadmin'],
       default: 'applicant',
     },
     district: {

@@ -37,7 +37,13 @@ const Login = () => {
     setIsSubmitting(true);
     try {
       const user = await login(formData);
-      navigate(user.role === 'admin' ? '/admin/dashboard' : '/dashboard');
+      if (user.role === 'superadmin') {
+        navigate('/superadmin/dashboard');
+      } else if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setServerError(
         err.response?.data?.message || 'Unable to sign in. Please try again.'

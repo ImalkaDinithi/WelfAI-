@@ -9,7 +9,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   if (!user) return <Navigate to="/login" replace />;
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {
-    const fallbackPath = user.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+    let fallbackPath = '/dashboard';
+    if (user.role === 'superadmin') {
+      fallbackPath = '/superadmin/dashboard';
+    } else if (user.role === 'admin') {
+      fallbackPath = '/admin/dashboard';
+    }
     return <Navigate to={fallbackPath} replace />;
   }
 

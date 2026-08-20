@@ -41,6 +41,18 @@ app.get(
     });
   }
 );
+app.get(
+  '/api/superadmin/dashboard',
+  protect,
+  authorize('superadmin'),
+  (req, res) => {
+    res.json({
+      success: true,
+      message: 'Superadmin-only endpoint reached',
+      user: req.user,
+    });
+  }
+);
 
 // Error handling (must be last)
 app.use(notFound);

@@ -12,6 +12,7 @@ const initialState = {
   district: '',
   password: '',
   confirmPassword: '',
+  role: 'applicant',
 };
 
 const Register = () => {
@@ -54,8 +55,12 @@ const Register = () => {
     setIsSubmitting(true);
     try {
       const { confirmPassword, ...payload } = formData;
-      await register(payload);
-      navigate('/dashboard');
+      const user = await register(payload);
+      if (user?.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setServerError(
         err.response?.data?.message || 'Unable to register. Please try again.'
@@ -72,11 +77,14 @@ const Register = () => {
       <div className="flex w-full flex-col justify-center px-6 py-12 sm:px-10 lg:w-[55%] lg:px-20">
         <div className="mx-auto w-full max-w-sm">
           <h2 className="font-serif text-2xl font-medium text-slate-950">
-            Create your applicant account
+            {formData.role === 'admin'
+              ? 'Create your admin account'
+              : 'Create your applicant account'}
           </h2>
           <p className="mt-1.5 text-sm text-slate-500">
-            Register to submit your welfare application and get your
-            eligibility score.
+            {formData.role === 'admin'
+              ? 'Register to manage and review welfare applications across districts.'
+              : 'Register to submit your welfare application and get your eligibility score.'}
           </p>
 
           {serverError && (
@@ -86,6 +94,40 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit} className="mt-7" noValidate>
+            {/* Role selector (Applicant / Admin only) */}
+            <div className="mb-5">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
+                Account Type
+              </label>
+              <div className="grid grid-cols-2 gap-2 rounded-lg bg-slate-200/60 p-1 border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: 'applicant' }))
+                  }
+                  className={`rounded-md py-2 text-xs font-semibold transition ${
+                    formData.role === 'applicant'
+                      ? 'bg-teal-900 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-950'
+                  }`}
+                >
+                  Applicant
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, role: 'admin' }))
+                  }
+                  className={`rounded-md py-2 text-xs font-semibold transition ${
+                    formData.role === 'admin'
+                      ? 'bg-teal-900 text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-950'
+                  }`}
+                >
+                  Admin
+                </button>
+              </div>
+            </div>
             <FormField
               label="Full name"
               name="fullName"
