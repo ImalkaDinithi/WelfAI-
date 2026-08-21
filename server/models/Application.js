@@ -392,7 +392,6 @@ const verificationDetailsSchema = new mongoose.Schema(
     bankAccountNumber: {
       type: String,
       required: [true, 'Bank account number is required'],
-      select: false,
       trim: true,
     },
     electricityAccountNumber: {
@@ -460,6 +459,10 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       default: '',
       trim: true,
+    },
+    reviewedAt: {
+      type: Date,
+      default: null,
     },
   },
   {

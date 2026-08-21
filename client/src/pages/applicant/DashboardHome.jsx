@@ -105,8 +105,45 @@ const DashboardHome = () => {
           ) : (
             <div className="space-y-4">
               <p className="text-sm text-slate-600">
-                Your application has been submitted and is currently being processed by the system.
+                {application.status === 'Approved'
+                  ? 'Your application has been reviewed and approved by the administration.'
+                  : application.status === 'Rejected'
+                  ? 'Your application review has been completed and rejected by the administration.'
+                  : 'Your application has been submitted and is currently being processed by the system.'}
               </p>
+
+              {application.status === 'Rejected' && (
+                <div className="rounded-lg border border-red-200 bg-red-50/80 p-4 space-y-1.5">
+                  <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
+                    <span>❌</span>
+                    <span>Admin Review Notes / Determination Explanation:</span>
+                  </span>
+                  <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-red-200">
+                    {application.reviewNotes || 'No specific review notes provided by reviewer.'}
+                  </p>
+                </div>
+              )}
+
+              {application.status === 'Approved' && (
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-4 space-y-1.5">
+                  <span className="text-xs font-semibold text-emerald-800 flex items-center space-x-1">
+                    <span>✅</span>
+                    <span>Application Approved</span>
+                  </span>
+                  {application.reviewNotes ? (
+                    <div className="mt-2 pt-1 border-t border-emerald-200/60 space-y-1">
+                      <span className="text-xs font-semibold text-emerald-900 block">Admin Review Notes / Determination Explanation:</span>
+                      <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-emerald-200">
+                        {application.reviewNotes}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-emerald-700">
+                      Your welfare application has been approved by the administration.
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-lg border border-slate-100 bg-slate-50 p-4 text-xs">
                 <div>

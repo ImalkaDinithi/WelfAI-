@@ -73,6 +73,39 @@ const MyApplicationPage = () => {
         )}
       </div>
 
+      {application.status === 'Rejected' && (
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm space-y-2">
+          <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
+            <span>❌</span>
+            <span>Admin Review Notes / Determination Explanation:</span>
+          </span>
+          <p className="text-xs text-red-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-red-200">
+            {application.reviewNotes || 'No specific review notes provided by reviewer.'}
+          </p>
+        </div>
+      )}
+
+      {application.status === 'Approved' && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm space-y-2">
+          <span className="text-xs font-semibold text-emerald-800 flex items-center space-x-1">
+            <span>✅</span>
+            <span>Application Approved</span>
+          </span>
+          {application.reviewNotes ? (
+            <div className="space-y-1">
+              <span className="text-xs font-semibold text-emerald-900 block">Admin Review Notes / Determination Explanation:</span>
+              <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">
+                {application.reviewNotes}
+              </p>
+            </div>
+          ) : (
+            <p className="text-xs text-emerald-700">
+              Your application has been approved by the welfare administration committee.
+            </p>
+          )}
+        </div>
+      )}
+
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <ReviewSubmitStep
           formData={application}

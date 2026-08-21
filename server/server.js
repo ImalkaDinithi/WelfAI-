@@ -6,6 +6,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const locationRoutes = require('./routes/locationRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const { protect, authorize } = require('./middleware/authMiddleware');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
@@ -29,18 +30,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/locations', locationRoutes);
-app.get(
-  '/api/admin/applications',
-  protect,
-  authorize('admin'),
-  (req, res) => {
-    res.json({
-      success: true,
-      message: 'Admin-only applications endpoint reached',
-      user: req.user,
-    });
-  }
-);
+app.use('/api/admin', adminRoutes);
 app.get(
   '/api/superadmin/dashboard',
   protect,

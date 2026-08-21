@@ -13,10 +13,11 @@ import ProfilePage from './pages/applicant/ProfilePage';
 import FraudResultPage from './pages/applicant/FraudResultPage';
 import RecommendationsPage from './pages/applicant/RecommendationsPage';
 
-import ProtectedRoute from './components/ProtectedRoute';
+import AdminDashboard from './pages/AdminDashboard';
+import ReviewQueue from './pages/admin/ReviewQueue';
+import ApplicationReview from './pages/admin/ApplicationReview';
 
-// Placeholder admin dashboard — replace when building Admin module
-const AdminDashboard = () => <div className="p-8 font-serif text-xl">Admin Dashboard Placeholder</div>;
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Placeholder superadmin dashboard — replace when building Superadmin module
 const SuperAdminDashboard = () => <div className="p-8 font-serif text-xl">Super Admin Dashboard Placeholder</div>;
@@ -56,15 +57,28 @@ function App() {
             }
           />
 
-          {/* Admin Dashboard Route */}
+          {/* Admin Routes */}
           <Route
             path="/admin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['admin']}>
+                <Navigate to="/admin/review-queue" replace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
             element={
               <ProtectedRoute allowedRoles={['admin']}>
                 <AdminDashboard />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="/admin/review-queue" replace />} />
+            <Route path="review-queue" element={<ReviewQueue />} />
+            <Route path="review-queue/:id" element={<ApplicationReview />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Route>
 
           {/* Super Admin Dashboard Route */}
           <Route

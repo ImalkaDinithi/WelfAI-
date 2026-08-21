@@ -111,7 +111,11 @@ const ProfilePage = () => {
       {/* Profile Overview Card */}
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 mb-4">
-          Applicant Information
+          {user?.role === 'admin'
+            ? 'Administrator Information'
+            : user?.role === 'superadmin'
+            ? 'Super Administrator Information'
+            : 'Applicant Information'}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
