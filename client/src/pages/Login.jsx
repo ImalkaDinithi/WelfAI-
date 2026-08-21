@@ -111,7 +111,7 @@ const Login = () => {
               to="/register"
               className="font-medium text-teal-700 hover:text-teal-800"
             >
-              Register as an applicant
+              Register here 
             </Link>
           </p>
         </div>
