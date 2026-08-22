@@ -407,6 +407,79 @@ const verificationDetailsSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const appealSchema = new mongoose.Schema(
+  {
+    groundsForAppeal: {
+      type: String,
+      required: [true, 'Grounds for appeal is required'],
+      enum: {
+        values: [
+          'Household income or expenditure recorded incorrectly',
+          'Health circumstances not considered',
+          'Housing situation not considered',
+          'Applicant or family details incorrect',
+          'Family assets recorded incorrectly',
+          'Education status not considered',
+          'Other',
+        ],
+        message: '{VALUE} is not a valid grounds for appeal',
+      },
+    },
+    appealText: {
+      type: String,
+      required: [true, 'Appeal explanation text is required'],
+      maxlength: [1500, 'Appeal text cannot exceed 1500 characters'],
+      trim: true,
+    },
+    contactPreference: {
+      type: String,
+      enum: {
+        values: ['Phone', 'SMS', 'Email'],
+        message: '{VALUE} is not a valid contact preference',
+      },
+      default: 'Email',
+    },
+    documents: {
+      type: [
+        new mongoose.Schema(
+          {
+            documentType: { type: String, trim: true },
+            fileUrl: { type: String, required: true, trim: true },
+            fileName: { type: String, required: true, trim: true },
+            uploadedAt: { type: Date, default: Date.now },
+          },
+          { _id: true }
+        ),
+      ],
+      default: [],
+    },
+    submittedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    reviewNotes: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    decision: {
+      type: String,
+      enum: ['Approved', 'Rejected', null],
+      default: null,
+    },
+    reviewedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+  { _id: false }
+);
+
 const applicationSchema = new mongoose.Schema(
   {
     applicant: {
@@ -429,7 +502,7 @@ const applicationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected'],
+        values: ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Appealed'],
         message: '{VALUE} is not a valid status',
       },
       default: 'Draft',
@@ -463,6 +536,10 @@ const applicationSchema = new mongoose.Schema(
     reviewedAt: {
       type: Date,
       default: null,
+    },
+    appeal: {
+      type: appealSchema,
+      default: undefined,
     },
   },
   {

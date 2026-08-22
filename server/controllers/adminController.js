@@ -37,7 +37,8 @@ const getPendingApplications = asyncHandler(async (req, res) => {
 const getApplicationById = asyncHandler(async (req, res) => {
   const application = await Application.findById(req.params.id)
     .populate('applicant', 'fullName email nic phone district')
-    .populate('reviewedBy', 'fullName email');
+    .populate('reviewedBy', 'fullName email')
+    .populate('appeal.reviewedBy', 'fullName email');
 
   if (!application) {
     res.status(404);
@@ -115,9 +116,122 @@ const reviewApplication = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get all appealed applications for admin review (supports filtering by active, approved, rejected, all)
+// @route   GET /api/admin/appeals
+// @access  Private/Admin
+const getAppealedApplications = asyncHandler(async (req, res) => {
+  const filter = req.query.filter || 'active';
+  let query = {};
+
+  if (filter === 'approved') {
+    query = { 'appeal.decision': 'Approved' };
+  } else if (filter === 'rejected') {
+    query = { 'appeal.decision': 'Rejected' };
+  } else if (filter === 'all') {
+    query = { 'appeal.submittedAt': { $exists: true } };
+  } else {
+    // default to 'active'
+    query = { status: 'Appealed' };
+  }
+
+  const applications = await Application.find(query)
+    .populate('applicant', 'fullName email nic phone district')
+    .sort({ 'appeal.submittedAt': 1, submittedAt: 1 });
+
+  res.json({
+    success: true,
+    count: applications.length,
+    data: applications,
+  });
+});
+
+// @desc    Get all applications (excluding Draft) for admin overview with status & district filters
+// @route   GET /api/admin/applications/all
+// @access  Private/Admin
+const getAllApplications = asyncHandler(async (req, res) => {
+  const { status, district } = req.query;
+
+  const query = { status: { $ne: 'Draft' } };
+
+  if (status && status !== 'ALL' && status !== 'All') {
+    query.status = status;
+  }
+
+  if (district && district !== 'All Districts' && district !== 'All') {
+    query['personalInfo.district'] = district;
+  }
+
+  const applications = await Application.find(query)
+    .populate('applicant', 'fullName email nic phone district')
+    .sort({ updatedAt: -1, createdAt: -1 });
+
+  const formattedApplications = applications.map((app) => {
+    const appObj = app.toObject();
+    return {
+      ...appObj,
+      hasAppeal: Boolean(app.appeal && app.appeal.submittedAt),
+      appealOutcome: app.appeal?.decision || null,
+    };
+  });
+
+  res.json({
+    success: true,
+    count: formattedApplications.length,
+    data: formattedApplications,
+  });
+});
+
+// @desc    Submit admin determination for an appeal
+// @route   PATCH /api/admin/appeals/:id/review
+// @access  Private/Admin
+const reviewAppeal = asyncHandler(async (req, res) => {
+  const { decision, reviewNotes } = req.body;
+
+  if (!['Approved', 'Rejected'].includes(decision)) {
+    res.status(400);
+    throw new Error('Invalid appeal decision. Must be Approved or Rejected');
+  }
+
+  if (!reviewNotes || !reviewNotes.trim()) {
+    res.status(400);
+    throw new Error('Review notes explanation is required for appeal determinations');
+  }
+
+  const application = await Application.findById(req.params.id);
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  if (application.status !== 'Appealed' || !application.appeal) {
+    res.status(400);
+    throw new Error('Cannot review appeal. Application status is not Appealed.');
+  }
+
+  application.appeal.decision = decision;
+  application.appeal.reviewedBy = req.user.userId;
+  application.appeal.reviewNotes = reviewNotes.trim();
+  application.appeal.reviewedAt = new Date();
+
+  // Set top-level status to the appeal outcome
+  application.status = decision;
+
+  await application.save();
+
+  res.json({
+    success: true,
+    message: `Appeal ${decision.toLowerCase()} successfully`,
+    data: application,
+  });
+});
+
 module.exports = {
   getPendingApplications,
   getApplicationById,
   markUnderReview,
   reviewApplication,
+  getAppealedApplications,
+  getAllApplications,
+  reviewAppeal,
 };

@@ -12,10 +12,14 @@ import MyApplicationPage from './pages/applicant/MyApplicationPage';
 import ProfilePage from './pages/applicant/ProfilePage';
 import FraudResultPage from './pages/applicant/FraudResultPage';
 import RecommendationsPage from './pages/applicant/RecommendationsPage';
+import AppealForm from './pages/applicant/AppealForm';
 
 import AdminDashboard from './pages/AdminDashboard';
 import ReviewQueue from './pages/admin/ReviewQueue';
 import ApplicationReview from './pages/admin/ApplicationReview';
+import AppealQueue from './pages/admin/AppealQueue';
+import AppealReview from './pages/admin/AppealReview';
+import ApplicationsOverview from './pages/admin/ApplicationsOverview';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -57,6 +61,16 @@ function App() {
             }
           />
 
+          {/* Appeal Form Route */}
+          <Route
+            path="/appeal"
+            element={
+              <ProtectedRoute allowedRoles={['applicant']}>
+                <AppealForm />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Admin Routes */}
           <Route
             path="/admin/dashboard"
@@ -77,6 +91,9 @@ function App() {
             <Route index element={<Navigate to="/admin/review-queue" replace />} />
             <Route path="review-queue" element={<ReviewQueue />} />
             <Route path="review-queue/:id" element={<ApplicationReview />} />
+            <Route path="appeal-queue" element={<AppealQueue />} />
+            <Route path="appeal-queue/:id" element={<AppealReview />} />
+            <Route path="applications" element={<ApplicationsOverview />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
 

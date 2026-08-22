@@ -8,6 +8,8 @@ const {
   uploadDocuments,
   getMyApplication,
   deleteDocument,
+  submitAppeal,
+  uploadAppealDocuments,
 } = require('../controllers/applicationController');
 
 // @route   PUT /api/applications/draft
@@ -15,6 +17,12 @@ router.put('/draft', protect, createOrUpdateDraft);
 
 // @route   POST /api/applications/submit
 router.post('/submit', protect, submitApplication);
+
+// @route   POST /api/applications/appeal
+router.post('/appeal', protect, submitAppeal);
+
+// @route   POST /api/applications/appeal/documents
+router.post('/appeal/documents', protect, upload.array('files', 5), uploadAppealDocuments);
 
 // @route   POST /api/applications/:id/documents
 router.post('/:id/documents', protect, upload.array('files', 10), uploadDocuments);

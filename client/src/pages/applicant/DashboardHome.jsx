@@ -34,6 +34,8 @@ const DashboardHome = () => {
         return 'bg-emerald-100 text-emerald-800 border-emerald-200';
       case 'Rejected':
         return 'bg-red-100 text-red-800 border-red-200';
+      case 'Appealed':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'Draft':
       default:
         return 'bg-amber-100 text-amber-800 border-amber-200';
@@ -48,7 +50,7 @@ const DashboardHome = () => {
           Welcome back, {user?.fullName || 'Applicant'}!
         </h1>
         <p className="mt-2 text-sm text-teal-100 max-w-xl">
-          Manage your Sri Lanka Welfare Scheme application, track verification progress, and view recommendations.
+          Manage your Sri Lanka Welfare Scheme application, track verification progress, and view appeal determinations.
         </p>
       </div>
 
@@ -109,11 +111,14 @@ const DashboardHome = () => {
                   ? 'Your application has been reviewed and approved by the administration.'
                   : application.status === 'Rejected'
                   ? 'Your application review has been completed and rejected by the administration.'
+                  : application.status === 'Appealed'
+                  ? 'Your formal appeal has been logged and is under review by the Appeals Committee.'
                   : 'Your application has been submitted and is currently being processed by the system.'}
               </p>
 
+              {/* Rejected status callout */}
               {application.status === 'Rejected' && (
-                <div className="rounded-lg border border-red-200 bg-red-50/80 p-4 space-y-1.5">
+                <div className="rounded-lg border border-red-200 bg-red-50/80 p-4 space-y-2">
                   <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
                     <span>❌</span>
                     <span>Admin Review Notes / Determination Explanation:</span>
@@ -121,17 +126,78 @@ const DashboardHome = () => {
                   <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-red-200">
                     {application.reviewNotes || 'No specific review notes provided by reviewer.'}
                   </p>
+
+                  {/* Appeal Ruling outcome if present */}
+                  {application.appeal?.decision && (
+                    <div className="mt-2 pt-2 border-t border-red-200/80">
+                      <span className="text-xs font-bold text-red-900 block mb-1">
+                        Appeal Outcome: Upheld Rejection
+                      </span>
+                      <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-2.5 rounded border border-red-200">
+                        {application.appeal.reviewNotes}
+                      </p>
+                    </div>
+                  )}
+
+                  {!application.appeal && (
+                    <div className="pt-1">
+                      <Link
+                        to="/appeal"
+                        className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
+                      >
+                        Appeal This Decision →
+                      </Link>
+                    </div>
+                  )}
                 </div>
               )}
 
+              {/* Appealed status callout */}
+              {application.status === 'Appealed' && (
+                <div className="rounded-lg border border-purple-200 bg-purple-50/80 p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-semibold text-purple-900 flex items-center space-x-1">
+                      <span>⚖️</span>
+                      <span>Appeal Submitted & Under Review</span>
+                    </span>
+                    <span className="text-[11px] text-purple-700 font-medium">
+                      Submitted: {application.appeal?.submittedAt ? new Date(application.appeal.submittedAt).toLocaleDateString() : 'N/A'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-purple-800">
+                    Grounds: <strong>{application.appeal?.groundsForAppeal}</strong>
+                  </p>
+                  <div className="pt-1">
+                    <Link
+                      to="/appeal"
+                      className="inline-flex items-center rounded-lg border border-purple-300 bg-white px-4 py-1.5 text-xs font-semibold text-purple-900 hover:bg-purple-50"
+                    >
+                      View Appeal Details →
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Approved status callout */}
               {application.status === 'Approved' && (
-                <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-4 space-y-1.5">
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50/80 p-4 space-y-2">
                   <span className="text-xs font-semibold text-emerald-800 flex items-center space-x-1">
                     <span>✅</span>
-                    <span>Application Approved</span>
+                    <span>
+                      {application.appeal?.decision === 'Approved'
+                        ? 'Application Approved via Appeal'
+                        : 'Application Approved'}
+                    </span>
                   </span>
-                  {application.reviewNotes ? (
-                    <div className="mt-2 pt-1 border-t border-emerald-200/60 space-y-1">
+                  {application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
+                    <div className="space-y-1">
+                      <span className="text-xs font-semibold text-emerald-900 block">Appeals Committee Determination Notes:</span>
+                      <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-emerald-200">
+                        {application.appeal.reviewNotes}
+                      </p>
+                    </div>
+                  ) : application.reviewNotes ? (
+                    <div className="space-y-1">
                       <span className="text-xs font-semibold text-emerald-900 block">Admin Review Notes / Determination Explanation:</span>
                       <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-emerald-200">
                         {application.reviewNotes}

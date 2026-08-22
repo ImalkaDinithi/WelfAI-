@@ -34,3 +34,21 @@ export const deleteDocument = async (applicationId, documentId) => {
   );
   return data;
 };
+
+export const submitAppeal = async (groundsForAppeal, appealText, contactPreference) => {
+  const { data } = await axiosInstance.post('/applications/appeal', {
+    groundsForAppeal,
+    appealText,
+    contactPreference,
+  });
+  return data;
+};
+
+export const uploadAppealDocument = async (formData) => {
+  const { data } = await axiosInstance.post('/applications/appeal/documents', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};

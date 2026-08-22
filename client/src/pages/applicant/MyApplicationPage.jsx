@@ -73,8 +73,9 @@ const MyApplicationPage = () => {
         )}
       </div>
 
+      {/* Rejected status callout */}
       {application.status === 'Rejected' && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm space-y-2">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm space-y-3">
           <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
             <span>❌</span>
             <span>Admin Review Notes / Determination Explanation:</span>
@@ -82,16 +83,77 @@ const MyApplicationPage = () => {
           <p className="text-xs text-red-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-red-200">
             {application.reviewNotes || 'No specific review notes provided by reviewer.'}
           </p>
+
+          {/* Appeal Ruling outcome if present */}
+          {application.appeal?.decision && (
+            <div className="pt-2 border-t border-red-200">
+              <span className="text-xs font-bold text-red-900 block mb-1">
+                Appeal Determination: Upheld Rejection
+              </span>
+              <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-3 rounded-lg border border-red-200">
+                {application.appeal.reviewNotes}
+              </p>
+            </div>
+          )}
+
+          {!application.appeal && (
+            <div className="pt-1">
+              <Link
+                to="/appeal"
+                className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
+              >
+                Appeal This Decision →
+              </Link>
+            </div>
+          )}
         </div>
       )}
 
+      {/* Appealed status callout */}
+      {application.status === 'Appealed' && (
+        <div className="rounded-xl border border-purple-200 bg-purple-50 p-5 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-purple-900 flex items-center space-x-1">
+              <span>⚖️</span>
+              <span>Appeal Submitted & Under Review</span>
+            </span>
+            <span className="text-xs text-purple-700 font-medium">
+              Submitted: {application.appeal?.submittedAt ? new Date(application.appeal.submittedAt).toLocaleDateString('en-LK') : 'N/A'}
+            </span>
+          </div>
+          <p className="text-xs text-purple-800">
+            Grounds: <strong>{application.appeal?.groundsForAppeal}</strong>
+          </p>
+          <div>
+            <Link
+              to="/appeal"
+              className="inline-flex items-center rounded-lg border border-purple-300 bg-white px-4 py-1.5 text-xs font-semibold text-purple-900 hover:bg-purple-50"
+            >
+              View Appeal Details →
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Approved status callout */}
       {application.status === 'Approved' && (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm space-y-2">
           <span className="text-xs font-semibold text-emerald-800 flex items-center space-x-1">
             <span>✅</span>
-            <span>Application Approved</span>
+            <span>
+              {application.appeal?.decision === 'Approved'
+                ? 'Application Approved via Appeal'
+                : 'Application Approved'}
+            </span>
           </span>
-          {application.reviewNotes ? (
+          {application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
+            <div className="space-y-1">
+              <span className="text-xs font-semibold text-emerald-900 block">Appeals Committee Determination Notes:</span>
+              <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">
+                {application.appeal.reviewNotes}
+              </p>
+            </div>
+          ) : application.reviewNotes ? (
             <div className="space-y-1">
               <span className="text-xs font-semibold text-emerald-900 block">Admin Review Notes / Determination Explanation:</span>
               <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">

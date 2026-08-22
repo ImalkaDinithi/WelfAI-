@@ -302,10 +302,112 @@ const deleteDocument = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Submit an appeal for a rejected application
+// @route   POST /api/applications/appeal
+// @access  Private (Applicant)
+const submitAppeal = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const { groundsForAppeal, appealText, contactPreference } = req.body;
+
+  const application = await Application.findOne({ applicant: userId });
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application record not found');
+  }
+
+  if (application.status !== 'Rejected') {
+    res.status(400);
+    throw new Error(`Cannot submit appeal. Only rejected applications can be appealed (Current status: ${application.status})`);
+  }
+
+  if (!groundsForAppeal) {
+    res.status(400);
+    throw new Error('Grounds for appeal is required');
+  }
+
+  if (!appealText || !appealText.trim()) {
+    res.status(400);
+    throw new Error('Appeal explanation text is required');
+  }
+
+  if (appealText.trim().length > 1500) {
+    res.status(400);
+    throw new Error('Appeal explanation text cannot exceed 1500 characters');
+  }
+
+  application.appeal = {
+    groundsForAppeal,
+    appealText: appealText.trim(),
+    contactPreference: contactPreference || 'Email',
+    documents: [],
+    submittedAt: new Date(),
+    reviewedBy: null,
+    reviewNotes: '',
+    decision: null,
+    reviewedAt: null,
+  };
+
+  application.status = 'Appealed';
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Appeal submitted successfully',
+    data: application,
+  });
+});
+
+// @desc    Upload evidence documents for an appeal
+// @route   POST /api/applications/appeal/documents
+// @access  Private (Applicant)
+const uploadAppealDocuments = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+
+  const application = await Application.findOne({ applicant: userId });
+
+  if (!application || application.status !== 'Appealed' || !application.appeal) {
+    res.status(400);
+    throw new Error('Cannot upload appeal documents. Application status must be Appealed.');
+  }
+
+  const files = req.files || (req.file ? [req.file] : []);
+  if (files.length === 0) {
+    res.status(400);
+    throw new Error('No files provided for appeal upload');
+  }
+
+  let documentTypes = req.body.documentType || req.body.documentTypes;
+  if (!Array.isArray(documentTypes)) {
+    documentTypes = [documentTypes];
+  }
+
+  const newDocs = files.map((file, index) => {
+    const docType = documentTypes[index] || documentTypes[0] || 'Appeal Supporting Evidence';
+    return {
+      documentType: docType,
+      fileUrl: `/uploads/documents/${file.filename}`,
+      fileName: file.originalname,
+      uploadedAt: new Date(),
+    };
+  });
+
+  application.appeal.documents.push(...newDocs);
+  await application.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    message: 'Appeal documents uploaded successfully',
+    data: application.appeal.documents,
+  });
+});
+
 module.exports = {
   createOrUpdateDraft,
   submitApplication,
   uploadDocuments,
   getMyApplication,
   deleteDocument,
+  submitAppeal,
+  uploadAppealDocuments,
 };

@@ -22,3 +22,23 @@ export const reviewApplication = async (id, decision, reviewNotes) => {
   });
   return data;
 };
+
+export const getAllApplications = async (params = {}) => {
+  const { data } = await axiosInstance.get('/admin/applications/all', { params });
+  return data;
+};
+
+export const getAppealedApplications = async (filter = 'active') => {
+  const { data } = await axiosInstance.get('/admin/appeals', {
+    params: { filter },
+  });
+  return data;
+};
+
+export const reviewAppeal = async (id, decision, reviewNotes) => {
+  const { data } = await axiosInstance.patch(`/admin/appeals/${id}/review`, {
+    decision,
+    reviewNotes,
+  });
+  return data;
+};

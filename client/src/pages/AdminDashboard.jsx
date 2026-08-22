@@ -4,6 +4,8 @@ import { useAuth } from '../context/AuthContext';
 
 const NAV_ITEMS = [
   { path: '/admin/review-queue', label: 'Review Queue', icon: '📋', end: false },
+  { path: '/admin/appeal-queue', label: 'Appeals Queue', icon: '⚖️', end: false },
+  { path: '/admin/applications', label: 'All Applications', icon: '🗂️', end: false },
   { path: '/admin/profile', label: 'My Profile', icon: '👤', end: false },
 ];
 
