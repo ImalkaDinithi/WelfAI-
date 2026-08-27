@@ -212,7 +212,7 @@ const employmentInfoSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Employment type is required'],
       enum: {
-        values: ['Permanent', 'Temporary', 'Contract', 'Daily-Wage', 'None'],
+        values: ['Unemployed', 'Daily-Wage', 'Self-Employed', 'Permanent'],
         message: '{VALUE} is not a valid employment type',
       },
     },
@@ -275,9 +275,8 @@ const educationSkillsSchema = new mongoose.Schema(
           'Primary',
           'O-Level',
           'A-Level',
-          'Diploma',
+          'Vocational',
           'Degree',
-          'Postgraduate',
         ],
         message: '{VALUE} is not a valid educational qualification',
       },
@@ -480,6 +479,147 @@ const appealSchema = new mongoose.Schema(
   { _id: false }
 );
 
+// ---------------------------------------------------------------------------
+// Lifestyle Improvement Plan — Phase 1 Schema
+// ---------------------------------------------------------------------------
+
+// Reserved for Phase 2 (evidence-upload). Fields are defined now so the schema
+// doesn't require a migration when that phase is built. No endpoints use this yet.
+const lifestylePlanSupportingDocumentSchema = new mongoose.Schema(
+  {
+    documentType: { type: String, trim: true },
+    fileUrl: { type: String, trim: true },
+    fileName: { type: String, trim: true },
+    uploadedAt: { type: Date, default: Date.now },
+    periodLabel: { type: String, trim: true }, // e.g. "Jan 2024 – Mar 2024"
+  },
+  { _id: true }
+);
+
+const periodReviewSchema = new mongoose.Schema(
+  {
+    periodLabel: {
+      type: String,
+      required: [true, 'Period label is required'],
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Reviewed'],
+      default: 'Pending',
+    },
+    reviewNotes: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    reviewedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+  { _id: true }
+);
+
+const lifestylePlanSchema = new mongoose.Schema(
+  {
+    status: {
+      type: String,
+      enum: {
+        values: ['Not Started', 'Submitted', 'Under Review', 'ML Assessed'],
+        message: '{VALUE} is not a valid lifestyle plan status',
+      },
+      default: 'Not Started',
+    },
+    focusAreas: {
+      type: [String],
+      enum: {
+        values: [
+          'Employment',
+          'Vocational Training',
+          'Small Business',
+          'Education',
+          'Health And Wellbeing',
+          'Housing Improvement',
+          'Other',
+        ],
+        message: '{VALUE} is not a valid focus area',
+      },
+      default: [],
+    },
+    goals: {
+      type: String,
+      trim: true,
+      maxlength: [1000, 'Goals cannot exceed 1000 characters'],
+    },
+    actionSteps: {
+      type: String,
+      trim: true,
+      maxlength: [1500, 'Action steps cannot exceed 1500 characters'],
+    },
+    supportRequested: {
+      type: String,
+      enum: {
+        values: [
+          'Vocational Training Placement',
+          'Small Business Start-Up Capital',
+          'Educational Bursary',
+          'Counselling And Guidance',
+          'Other',
+        ],
+        message: '{VALUE} is not a valid support type',
+      },
+    },
+    requestedDurationMonths: {
+      type: Number,
+      min: [1, 'Requested duration must be at least 1 month'],
+      max: [60, 'Requested duration cannot exceed 60 months'],
+    },
+    submittedAt: {
+      type: Date,
+      default: null,
+    },
+    adminReviewNotes: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    reviewedAt: {
+      type: Date,
+      default: null,
+    },
+    // ML prediction result — populated by runMlPrediction admin action
+    mlPrediction: {
+      successProbability: { type: Number },
+      estimatedDurationMonths: { type: Number },
+      modelVersion: { type: String, trim: true },
+      predictedAt: { type: Date },
+    },
+    // Reserved for Phase 2 (evidence-upload). Do not build endpoints for this yet.
+    supportingDocuments: {
+      type: [lifestylePlanSupportingDocumentSchema],
+      default: [],
+    },
+    periodReviews: {
+      type: [periodReviewSchema],
+      default: [],
+    },
+  },
+  { _id: false }
+);
+
+// ---------------------------------------------------------------------------
+
 const applicationSchema = new mongoose.Schema(
   {
     applicant: {
@@ -539,6 +679,11 @@ const applicationSchema = new mongoose.Schema(
     },
     appeal: {
       type: appealSchema,
+      default: undefined,
+    },
+    // Lifestyle improvement plan — undefined until applicant submits (mirrors appeal pattern)
+    lifestylePlan: {
+      type: lifestylePlanSchema,
       default: undefined,
     },
   },

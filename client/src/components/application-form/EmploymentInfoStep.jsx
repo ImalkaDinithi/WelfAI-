@@ -71,11 +71,10 @@ const EmploymentInfoStep = ({ data = {}, onChange, errors = {} }) => {
             }`}
           >
             <option value="">Select Employment Type</option>
-            <option value="Permanent">Permanent</option>
-            <option value="Temporary">Temporary</option>
-            <option value="Contract">Contract</option>
+            <option value="Unemployed">Unemployed</option>
             <option value="Daily-Wage">Daily-Wage</option>
-            <option value="None">None</option>
+            <option value="Self-Employed">Self-Employed</option>
+            <option value="Permanent">Permanent</option>
           </select>
           {errors.employmentType && (
             <p className="mt-1 text-xs text-red-600">{errors.employmentType}</p>

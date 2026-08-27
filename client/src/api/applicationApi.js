@@ -52,3 +52,39 @@ export const uploadAppealDocument = async (formData) => {
   });
   return data;
 };
+
+export const submitLifestylePlan = async (
+  focusAreas,
+  goals,
+  actionSteps,
+  supportRequested,
+  requestedDurationMonths
+) => {
+  const { data } = await axiosInstance.post('/applications/lifestyle-plan', {
+    focusAreas,
+    goals,
+    actionSteps,
+    supportRequested,
+    requestedDurationMonths,
+  });
+  return data;
+};
+
+export const uploadPlanEvidence = async (file, periodLabel, documentType) => {
+  const formData = new FormData();
+  formData.append('files', file);
+  formData.append('periodLabel', periodLabel);
+  formData.append('documentType', documentType);
+
+  const { data } = await axiosInstance.post('/applications/lifestyle-plan/evidence', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return data;
+};
+
+export const deletePlanEvidence = async (documentId) => {
+  const { data } = await axiosInstance.delete(`/applications/lifestyle-plan/evidence/${documentId}`);
+  return data;
+};

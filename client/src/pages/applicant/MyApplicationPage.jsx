@@ -168,6 +168,82 @@ const MyApplicationPage = () => {
         </div>
       )}
 
+      {/* Lifestyle Plan callout in MyApplicationPage */}
+      {application.status === 'Approved' && (() => {
+        const lp = application.lifestylePlan;
+        const lpStatus = lp?.status;
+        if (!lp || lpStatus === 'Not Started') {
+          return (
+            <div className="rounded-xl border border-teal-200 bg-teal-50/50 p-5 shadow-sm flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-teal-950 flex items-center space-x-1.5 font-serif">
+                  <span>🌱</span>
+                  <span>Lifestyle Improvement Plan</span>
+                </h3>
+                <p className="text-xs text-teal-850 mt-1">
+                  Your application is approved. Submit your lifestyle improvement plan to begin the next phase of your welfare support.
+                </p>
+              </div>
+              <Link
+                to="/dashboard/lifestyle-plan"
+                className="rounded-lg bg-teal-900 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-800 transition shadow-sm shrink-0"
+              >
+                Submit Plan →
+              </Link>
+            </div>
+          );
+        }
+
+        if (lpStatus === 'ML Assessed') {
+          const prob = lp.mlPrediction?.successProbability ?? 0;
+          const dur = lp.mlPrediction?.estimatedDurationMonths ?? 0;
+          let badgeColor = 'bg-red-100 text-red-800 border-red-200';
+          if (prob >= 70) badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+          else if (prob >= 40) badgeColor = 'bg-amber-100 text-amber-800 border-amber-200';
+
+          return (
+            <div className="rounded-xl border border-teal-200 bg-teal-50/30 p-5 shadow-sm space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-teal-950 flex items-center space-x-1.5 font-serif">
+                  <span>🌱</span>
+                  <span>Lifestyle Plan — Assessed</span>
+                </span>
+                <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[10px] font-bold ${badgeColor}`}>
+                  {prob}% success
+                </span>
+              </div>
+              <p className="text-xs text-slate-600">
+                ML assessment complete. Estimated program duration: <strong>{dur} months</strong>.
+              </p>
+              <Link
+                to="/dashboard/lifestyle-plan"
+                className="inline-flex items-center text-xs font-semibold text-teal-900 hover:underline"
+              >
+                View full assessment &amp; evidence portal →
+              </Link>
+            </div>
+          );
+        }
+
+        return (
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 shadow-sm flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-slate-900 flex items-center space-x-1.5 font-serif">
+              <span>🌱</span>
+              <span>Lifestyle Plan: <span className="text-slate-700">{lpStatus}</span></span>
+            </h3>
+            <Link
+              to="/dashboard/lifestyle-plan"
+              className="text-xs font-semibold text-teal-800 hover:underline"
+            >
+              View details →
+            </Link>
+          </div>
+        );
+      })()}
+
+
+
+
       <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <ReviewSubmitStep
           formData={application}

@@ -211,6 +211,81 @@ const DashboardHome = () => {
                 </div>
               )}
 
+              {/* Lifestyle Plan callout — only shown when application is Approved */}
+              {application.status === 'Approved' && (() => {
+                const lp = application.lifestylePlan;
+                const lpStatus = lp?.status;
+                const needsSubmission = !lp || lpStatus === 'Not Started';
+
+                if (needsSubmission) {
+                  return (
+                    <div className="rounded-lg border border-teal-300 bg-teal-50/80 p-4 space-y-1.5">
+                      <span className="text-xs font-semibold text-teal-900 flex items-center space-x-1">
+                        <span>🌱</span>
+                        <span>Lifestyle Improvement Plan</span>
+                      </span>
+                      <p className="text-xs text-teal-800">
+                        Your application is approved. Submit your lifestyle improvement plan to begin the next phase of your welfare support.
+                      </p>
+                      <div className="pt-1">
+                        <Link
+                          to="/dashboard/lifestyle-plan"
+                          className="inline-flex items-center rounded-lg bg-teal-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-teal-800 shadow-sm"
+                        >
+                          Submit Your Lifestyle Improvement Plan →
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (lpStatus === 'ML Assessed') {
+                  const prob = lp.mlPrediction?.successProbability ?? 0;
+                  const dur = lp.mlPrediction?.estimatedDurationMonths ?? 0;
+                  let badgeColor = 'bg-red-100 text-red-800 border-red-200';
+                  if (prob >= 70) badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-200';
+                  else if (prob >= 40) badgeColor = 'bg-amber-100 text-amber-800 border-amber-200';
+
+                  return (
+                    <div className="rounded-lg border border-teal-200 bg-teal-50/40 p-4 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-semibold text-teal-900 flex items-center space-x-1">
+                          <span>🌱</span>
+                          <span>Lifestyle Plan — Assessed</span>
+                        </span>
+                        <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-bold ${badgeColor}`}>
+                          {prob}% success
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600">
+                        ML assessment complete. Estimated duration: <strong>{dur} months</strong>.
+                      </p>
+                      <Link
+                        to="/dashboard/lifestyle-plan"
+                        className="inline-flex items-center text-xs font-semibold text-teal-900 hover:underline"
+                      >
+                        View full assessment & evidence portal →
+                      </Link>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-700 flex items-center space-x-1">
+                      <span>🌱</span>
+                      <span>Lifestyle Plan: <span className="text-slate-900">{lpStatus}</span></span>
+                    </span>
+                    <Link
+                      to="/dashboard/lifestyle-plan"
+                      className="text-xs font-semibold text-teal-800 hover:underline"
+                    >
+                      View details →
+                    </Link>
+                  </div>
+                );
+              })()}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-lg border border-slate-100 bg-slate-50 p-4 text-xs">
                 <div>
                   <span className="text-slate-500 block">Submitted On</span>

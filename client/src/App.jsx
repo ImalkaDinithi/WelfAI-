@@ -13,6 +13,7 @@ import ProfilePage from './pages/applicant/ProfilePage';
 import FraudResultPage from './pages/applicant/FraudResultPage';
 import RecommendationsPage from './pages/applicant/RecommendationsPage';
 import AppealForm from './pages/applicant/AppealForm';
+import LifestylePlanStatus from './pages/applicant/LifestylePlanStatus';
 
 import AdminDashboard from './pages/AdminDashboard';
 import ReviewQueue from './pages/admin/ReviewQueue';
@@ -20,6 +21,11 @@ import ApplicationReview from './pages/admin/ApplicationReview';
 import AppealQueue from './pages/admin/AppealQueue';
 import AppealReview from './pages/admin/AppealReview';
 import ApplicationsOverview from './pages/admin/ApplicationsOverview';
+import LifestylePlanQueue from './pages/admin/LifestylePlanQueue';
+import LifestylePlanReview from './pages/admin/LifestylePlanReview';
+import LifestylePlanForm from './pages/applicant/LifestylePlanForm';
+import PlanEvidenceUpload from './pages/applicant/PlanEvidenceUpload';
+import PlanProgressReview from './pages/admin/PlanProgressReview';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -49,6 +55,7 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="fraud-result" element={<FraudResultPage />} />
             <Route path="recommendations" element={<RecommendationsPage />} />
+            <Route path="lifestyle-plan" element={<LifestylePlanStatus />} />
           </Route>
 
           {/* Application Form Wizard Route */}
@@ -67,6 +74,26 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['applicant']}>
                 <AppealForm />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Lifestyle Plan Form Route */}
+          <Route
+            path="/lifestyle-plan"
+            element={
+              <ProtectedRoute allowedRoles={['applicant']}>
+                <LifestylePlanForm />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Lifestyle Plan Evidence Route */}
+          <Route
+            path="/lifestyle-plan/evidence"
+            element={
+              <ProtectedRoute allowedRoles={['applicant']}>
+                <PlanEvidenceUpload />
               </ProtectedRoute>
             }
           />
@@ -93,6 +120,9 @@ function App() {
             <Route path="review-queue/:id" element={<ApplicationReview />} />
             <Route path="appeal-queue" element={<AppealQueue />} />
             <Route path="appeal-queue/:id" element={<AppealReview />} />
+            <Route path="lifestyle-plan-queue" element={<LifestylePlanQueue />} />
+            <Route path="lifestyle-plan-queue/:id" element={<LifestylePlanReview />} />
+            <Route path="lifestyle-plan-queue/:id/progress" element={<PlanProgressReview />} />
             <Route path="applications" element={<ApplicationsOverview />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>

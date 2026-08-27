@@ -42,3 +42,36 @@ export const reviewAppeal = async (id, decision, reviewNotes) => {
   });
   return data;
 };
+
+// Lifestyle Improvement Plan API
+export const getPlansForReview = async (filter = 'active') => {
+  const { data } = await axiosInstance.get('/admin/lifestyle-plans', {
+    params: { filter },
+  });
+  return data;
+};
+
+export const markPlanUnderReview = async (id) => {
+  const { data } = await axiosInstance.patch(`/admin/lifestyle-plans/${id}/review-start`);
+  return data;
+};
+
+export const runMlPrediction = async (id, adminReviewNotes) => {
+  const { data } = await axiosInstance.post(`/admin/lifestyle-plans/${id}/predict`, {
+    adminReviewNotes,
+  });
+  return data;
+};
+
+export const getPlanProgress = async (id) => {
+  const { data } = await axiosInstance.get(`/admin/lifestyle-plans/${id}/progress`);
+  return data;
+};
+
+export const reviewPlanPeriod = async (id, periodLabel, reviewNotes) => {
+  const { data } = await axiosInstance.patch(`/admin/lifestyle-plans/${id}/progress/review`, {
+    periodLabel,
+    reviewNotes,
+  });
+  return data;
+};

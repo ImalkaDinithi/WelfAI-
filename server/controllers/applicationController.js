@@ -402,6 +402,200 @@ const uploadAppealDocuments = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Submit lifestyle improvement plan
+// @route   POST /api/applications/lifestyle-plan
+// @access  Private (Applicant)
+const submitLifestylePlan = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const { focusAreas, goals, actionSteps, supportRequested, requestedDurationMonths } = req.body;
+
+  const application = await Application.findOne({ applicant: userId });
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application record not found');
+  }
+
+  // Only approved applicants may submit a lifestyle plan
+  if (application.status !== 'Approved') {
+    res.status(400);
+    throw new Error(
+      `Cannot submit lifestyle plan. Application must be Approved (current status: ${application.status})`
+    );
+  }
+
+  // One-time submission — cannot resubmit or edit in this phase
+  if (application.lifestylePlan && application.lifestylePlan.status !== 'Not Started') {
+    res.status(400);
+    throw new Error(
+      `Lifestyle plan has already been submitted (current plan status: ${application.lifestylePlan.status})`
+    );
+  }
+
+  // Validate required text fields
+  if (!goals || !goals.trim()) {
+    res.status(400);
+    throw new Error('Goals are required');
+  }
+
+  if (!actionSteps || !actionSteps.trim()) {
+    res.status(400);
+    throw new Error('Action steps are required');
+  }
+
+  if (!focusAreas || !Array.isArray(focusAreas) || focusAreas.length === 0) {
+    res.status(400);
+    throw new Error('At least one focus area must be selected');
+  }
+
+  application.lifestylePlan = {
+    status: 'Submitted',
+    focusAreas,
+    goals: goals.trim(),
+    actionSteps: actionSteps.trim(),
+    supportRequested: supportRequested || undefined,
+    requestedDurationMonths: requestedDurationMonths || undefined,
+    submittedAt: new Date(),
+    adminReviewNotes: '',
+    reviewedBy: null,
+    reviewedAt: null,
+    mlPrediction: undefined,
+    supportingDocuments: [],
+  };
+
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Lifestyle improvement plan submitted successfully',
+    data: application,
+  });
+});
+
+// @desc    Upload progress evidence documents for an assessed lifestyle plan
+// @route   POST /api/applications/lifestyle-plan/evidence
+// @access  Private (Applicant)
+const uploadPlanEvidence = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const { periodLabel, documentType } = req.body;
+
+  const application = await Application.findOne({ applicant: userId });
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  const lp = application.lifestylePlan;
+  if (!lp) {
+    res.status(400);
+    throw new Error('No lifestyle plan found on this application');
+  }
+
+  // Guard: status must be ML Assessed
+  if (lp.status !== 'ML Assessed') {
+    res.status(400);
+    throw new Error('Evidence uploading is only available once your lifestyle plan has been assessed');
+  }
+
+  const estimatedDuration = lp.mlPrediction?.estimatedDurationMonths;
+  if (!estimatedDuration) {
+    res.status(400);
+    throw new Error('ML Prediction details not found on the lifestyle plan');
+  }
+
+  // Validate periodLabel format: matches "Month X" where X is 1 to estimatedDuration
+  const match = /^Month (\d+)$/.exec(periodLabel);
+  if (!match) {
+    res.status(400);
+    throw new Error('Invalid period label format. Must be "Month X" (e.g., "Month 1")');
+  }
+
+  const periodNum = parseInt(match[1], 10);
+  if (periodNum < 1 || periodNum > estimatedDuration) {
+    res.status(400);
+    throw new Error(`Period label must be between Month 1 and Month ${estimatedDuration}`);
+  }
+
+  const files = req.files || (req.file ? [req.file] : []);
+  if (files.length === 0) {
+    res.status(400);
+    throw new Error('No files provided for upload');
+  }
+
+  const newDocs = files.map((file) => {
+    return {
+      documentType: documentType || 'Evidence',
+      fileUrl: `/uploads/documents/${file.filename}`,
+      fileName: file.originalname,
+      uploadedAt: new Date(),
+      periodLabel,
+    };
+  });
+
+  if (!lp.supportingDocuments) {
+    lp.supportingDocuments = [];
+  }
+  lp.supportingDocuments.push(...newDocs);
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Evidence documents uploaded successfully',
+    data: lp.supportingDocuments,
+  });
+});
+
+// @desc    Delete a progress evidence document from lifestyle plan
+// @route   DELETE /api/applications/lifestyle-plan/evidence/:documentId
+// @access  Private (Applicant)
+const deletePlanEvidence = asyncHandler(async (req, res) => {
+  const userId = req.user.userId;
+  const { documentId } = req.params;
+
+  const application = await Application.findOne({ applicant: userId });
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  const lp = application.lifestylePlan;
+  if (!lp || !lp.supportingDocuments) {
+    res.status(404);
+    throw new Error('Lifestyle plan or supporting documents not found');
+  }
+
+  const docSubDoc = lp.supportingDocuments.id(documentId);
+  if (!docSubDoc) {
+    res.status(404);
+    throw new Error('Document not found');
+  }
+
+  // Remove physical file from disk if it exists locally
+  if (docSubDoc.fileUrl && docSubDoc.fileUrl.startsWith('/uploads/')) {
+    const relativePath = docSubDoc.fileUrl.replace('/uploads/', '');
+    const absolutePath = path.join(__dirname, '..', 'uploads', relativePath);
+    if (fs.existsSync(absolutePath)) {
+      try {
+        fs.unlinkSync(absolutePath);
+      } catch (err) {
+        console.error('Failed to remove document file from disk:', err.message);
+      }
+    }
+  }
+
+  // Pull document subdocument
+  lp.supportingDocuments.pull(documentId);
+  await application.save();
+
+  res.status(200).json({
+    success: true,
+    message: 'Evidence document deleted successfully',
+    data: lp.supportingDocuments,
+  });
+});
+
 module.exports = {
   createOrUpdateDraft,
   submitApplication,
@@ -410,4 +604,7 @@ module.exports = {
   deleteDocument,
   submitAppeal,
   uploadAppealDocuments,
+  submitLifestylePlan,
+  uploadPlanEvidence,
+  deletePlanEvidence,
 };

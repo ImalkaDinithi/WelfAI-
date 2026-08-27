@@ -67,9 +67,8 @@ const EducationSkillsStep = ({ data = {}, onChange, errors = {} }) => {
             <option value="Primary">Primary</option>
             <option value="O-Level">O-Level (G.C.E. O/L)</option>
             <option value="A-Level">A-Level (G.C.E. A/L)</option>
-            <option value="Diploma">Diploma</option>
-            <option value="Degree">Bachelor Degree</option>
-            <option value="Postgraduate">Postgraduate Degree</option>
+            <option value="Vocational">Vocational / Technical</option>
+            <option value="Degree">Degree</option>
           </select>
           {errors.highestEducationalQualification && (
             <p className="mt-1 text-xs text-red-600">

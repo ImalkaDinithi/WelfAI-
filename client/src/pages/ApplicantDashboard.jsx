@@ -5,10 +5,12 @@ import { useAuth } from '../context/AuthContext';
 const NAV_ITEMS = [
   { path: '/dashboard', label: 'Dashboard', icon: '📊', end: true },
   { path: '/dashboard/application', label: 'My Application', icon: '📝', end: false },
+  { path: '/dashboard/lifestyle-plan', label: 'Lifestyle Plan', icon: '🌱', end: false },
   { path: '/dashboard/profile', label: 'My Profile', icon: '👤', end: false },
   // { path: '/dashboard/fraud-result', label: 'Fraud & Eligibility Result', icon: '🔍', end: false },
   // { path: '/dashboard/recommendations', label: 'Recommendations', icon: '💡', end: false },
 ];
+
 
 const ApplicantDashboard = () => {
   const { user, logout } = useAuth();
