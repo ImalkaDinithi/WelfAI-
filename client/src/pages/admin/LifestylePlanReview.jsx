@@ -128,7 +128,7 @@ const LifestylePlanReview = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 p-6 sm:p-8 text-white shadow-sm">
+      <div className="rounded-2xl bg-linear-to-r from-teal-900 via-teal-800 to-slate-900 p-6 sm:p-8 text-white shadow-sm">
         <Link
           to="/admin/lifestyle-plan-queue"
           className="text-xs text-teal-300 hover:text-white mb-3 inline-flex items-center space-x-1"
