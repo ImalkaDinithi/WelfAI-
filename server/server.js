@@ -7,7 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const applicationRoutes = require('./routes/applicationRoutes');
 const locationRoutes = require('./routes/locationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const { protect, authorize } = require('./middleware/authMiddleware');
+const superAdminRoutes = require('./routes/superAdminRoutes');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 // Connect to MongoDB
@@ -31,18 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/applications', applicationRoutes);
 app.use('/api/locations', locationRoutes);
 app.use('/api/admin', adminRoutes);
-app.get(
-  '/api/superadmin/dashboard',
-  protect,
-  authorize('superadmin'),
-  (req, res) => {
-    res.json({
-      success: true,
-      message: 'Superadmin-only endpoint reached',
-      user: req.user,
-    });
-  }
-);
+app.use('/api/superadmin', superAdminRoutes);
 
 // Error handling (must be last)
 app.use(notFound);

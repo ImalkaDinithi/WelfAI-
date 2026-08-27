@@ -36,6 +36,8 @@ const DashboardHome = () => {
         return 'bg-red-100 text-red-800 border-red-200';
       case 'Appealed':
         return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Waiting List':
+        return 'bg-amber-100 text-amber-850 border-amber-300';
       case 'Draft':
       default:
         return 'bg-amber-100 text-amber-800 border-amber-200';
@@ -113,42 +115,76 @@ const DashboardHome = () => {
                   ? 'Your application review has been completed and rejected by the administration.'
                   : application.status === 'Appealed'
                   ? 'Your formal appeal has been logged and is under review by the Appeals Committee.'
+                  : application.status === 'Waiting List'
+                  ? 'Your benefit has been placed on the waiting list due to plan non-adherence.'
                   : 'Your application has been submitted and is currently being processed by the system.'}
               </p>
 
               {/* Rejected status callout */}
-              {application.status === 'Rejected' && (
-                <div className="rounded-lg border border-red-200 bg-red-50/80 p-4 space-y-2">
-                  <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
-                    <span>❌</span>
-                    <span>Admin Review Notes / Determination Explanation:</span>
+              {application.status === 'Rejected' && (() => {
+                const isWaitingListReject = application.waitingListInfo && application.waitingListInfo.resolution === 'Rejected';
+                const notes = isWaitingListReject ? application.waitingListInfo.resolvedNotes : application.reviewNotes;
+                const notesTitle = isWaitingListReject ? 'Benefit Disqualification & Rejection Notes:' : 'Admin Review Notes / Determination Explanation:';
+                return (
+                  <div className="rounded-lg border border-red-200 bg-red-50/80 p-4 space-y-2">
+                    <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
+                      <span>❌</span>
+                      <span>{notesTitle}</span>
+                    </span>
+                    <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-red-200">
+                      {notes || 'No specific review notes provided by reviewer.'}
+                    </p>
+
+                    {/* Appeal Ruling outcome if present */}
+                    {application.appeal?.decision && (
+                      <div className="mt-2 pt-2 border-t border-red-200/80">
+                        <span className="text-xs font-bold text-red-900 block mb-1">
+                          Appeal Outcome: Upheld Rejection
+                        </span>
+                        <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-2.5 rounded border border-red-200">
+                          {application.appeal.reviewNotes}
+                        </p>
+                      </div>
+                    )}
+
+                    {!application.appeal && (
+                      <div className="pt-1">
+                        <Link
+                          to="/appeal"
+                          className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
+                        >
+                          Appeal This Decision →
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Waiting List status callout */}
+              {application.status === 'Waiting List' && (
+                <div className="rounded-lg border border-amber-250 bg-amber-50/80 p-4 space-y-2">
+                  <span className="text-xs font-semibold text-amber-805 flex items-center space-x-1.5">
+                    <span>⚠️</span>
+                    <span>Benefit Placed on Waiting List:</span>
                   </span>
-                  <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-red-200">
-                    {application.reviewNotes || 'No specific review notes provided by reviewer.'}
+                  <div className="text-xs text-amber-800 font-medium bg-white/90 p-3 rounded border border-amber-200">
+                    <p className="font-semibold">Reason: {application.waitingListInfo?.reason}</p>
+                    {application.waitingListInfo?.disqualifiedAt && (
+                      <p className="text-[10px] text-slate-500 mt-1">Disqualified on: {new Date(application.waitingListInfo.disqualifiedAt).toLocaleDateString('en-LK')}</p>
+                    )}
+                  </div>
+                  <p className="text-xs text-amber-700 font-medium">
+                    Continue submitting evidence for your improvement plan to be considered for reinstatement.
                   </p>
-
-                  {/* Appeal Ruling outcome if present */}
-                  {application.appeal?.decision && (
-                    <div className="mt-2 pt-2 border-t border-red-200/80">
-                      <span className="text-xs font-bold text-red-900 block mb-1">
-                        Appeal Outcome: Upheld Rejection
-                      </span>
-                      <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-2.5 rounded border border-red-200">
-                        {application.appeal.reviewNotes}
-                      </p>
-                    </div>
-                  )}
-
-                  {!application.appeal && (
-                    <div className="pt-1">
-                      <Link
-                        to="/appeal"
-                        className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
-                      >
-                        Appeal This Decision →
-                      </Link>
-                    </div>
-                  )}
+                  <div className="pt-1">
+                    <Link
+                      to="/lifestyle-plan/evidence"
+                      className="inline-flex items-center rounded-lg bg-teal-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-teal-805 shadow-sm"
+                    >
+                      Upload Plan Evidence →
+                    </Link>
+                  </div>
                 </div>
               )}
 
@@ -189,7 +225,15 @@ const DashboardHome = () => {
                         : 'Application Approved'}
                     </span>
                   </span>
-                  {application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
+                  {application.waitingListInfo?.resolution === 'Reinstated' ? (
+                    <div className="space-y-1">
+                      <span className="text-xs font-semibold text-emerald-900 block">Benefit Reinstated Notes:</span>
+                      <div className="text-xs text-emerald-900 bg-white/90 p-3 rounded border border-emerald-200 space-y-1">
+                        <p>Your benefit was reinstated on {new Date(application.waitingListInfo.resolvedAt).toLocaleDateString('en-LK')}.</p>
+                        <p className="font-medium">Feedback: {application.waitingListInfo.resolvedNotes}</p>
+                      </div>
+                    </div>
+                  ) : application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
                     <div className="space-y-1">
                       <span className="text-xs font-semibold text-emerald-900 block">Appeals Committee Determination Notes:</span>
                       <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded border border-emerald-200">

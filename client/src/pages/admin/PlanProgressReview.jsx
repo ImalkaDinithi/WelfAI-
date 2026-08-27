@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { getPlanProgress, reviewPlanPeriod } from '../../api/adminApi';
+import { getPlanProgress, reviewPlanPeriod, disqualifyApplication } from '../../api/adminApi';
 
 const getPlanStatusBadge = (status) => {
   switch (status) {
@@ -29,6 +29,7 @@ const formatDate = (dateStr) => {
 
 const PlanProgressReview = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [planData, setPlanData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -36,6 +37,33 @@ const PlanProgressReview = () => {
   // Store notes text areas state by period label
   const [notesState, setNotesState] = useState({});
   const [submittingPeriod, setSubmittingPeriod] = useState({});
+
+  // Disqualification Form States
+  const [showDisqualifyForm, setShowDisqualifyForm] = useState(false);
+  const [disqualifyReason, setDisqualifyReason] = useState('');
+  const [disqualifyError, setDisqualifyError] = useState('');
+  const [disqualifying, setDisqualifying] = useState(false);
+
+  const handleDisqualify = async () => {
+    if (!disqualifyReason.trim()) {
+      setDisqualifyError('Please provide a reason for disqualification.');
+      return;
+    }
+
+    setDisqualifying(true);
+    try {
+      const res = await disqualifyApplication(id, disqualifyReason);
+      if (res.success) {
+        toast.success('Applicant disqualified successfully and moved to waiting list.');
+        navigate('/admin/waiting-list-queue');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.message || 'Failed to disqualify applicant.');
+    } finally {
+      setDisqualifying(false);
+    }
+  };
 
   const fetchProgress = async () => {
     try {
@@ -131,6 +159,66 @@ const PlanProgressReview = () => {
           </div>
         </div>
       </div>
+
+      {/* Disqualify Benefit Panel */}
+      {planData.applicationStatus === 'Approved' && (
+        <div className="rounded-xl border border-red-200 bg-red-50/50 p-5 shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h3 className="font-serif text-base font-bold text-red-950 flex items-center space-x-2">
+                <span>⚠️</span>
+                <span>Benefit Disqualification Action</span>
+              </h3>
+              <p className="text-xs text-red-900 mt-1">
+                Disqualify this applicant from receiving benefits if they are failing to adhere to their lifestyle improvement plan. This will move them to the waiting list.
+              </p>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => setShowDisqualifyForm(!showDisqualifyForm)}
+                className="rounded-lg bg-red-750 px-4 py-2.5 text-xs font-semibold text-white hover:bg-red-800 transition shadow-sm shrink-0"
+              >
+                {showDisqualifyForm ? 'Cancel Disqualification' : 'Disqualify from Benefit'}
+              </button>
+            </div>
+          </div>
+
+          {showDisqualifyForm && (
+            <div className="border-t border-red-200/65 pt-4 space-y-3">
+              <label htmlFor="disqualify-reason" className="text-xs font-bold text-red-950 block">
+                Disqualification Reason (Required)
+              </label>
+              <textarea
+                id="disqualify-reason"
+                rows={3}
+                value={disqualifyReason}
+                onChange={(e) => {
+                  setDisqualifyReason(e.target.value);
+                  setDisqualifyError('');
+                }}
+                placeholder="Explain the specific reasons for disqualifying this applicant from benefits..."
+                className={`w-full rounded-lg border bg-white p-3 text-xs text-slate-800 focus:outline-none focus:ring-1 focus:ring-red-500 resize-none ${
+                  disqualifyError ? 'border-red-400' : 'border-slate-300'
+                }`}
+              />
+              {disqualifyError && (
+                <p className="text-xs text-red-600 font-medium">{disqualifyError}</p>
+              )}
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  disabled={disqualifying}
+                  onClick={handleDisqualify}
+                  className="rounded-lg bg-red-900 px-5 py-2 text-xs font-bold text-white hover:bg-red-950 transition shadow-sm disabled:opacity-50"
+                >
+                  {disqualifying ? 'Processing Disqualification...' : 'Confirm Disqualification'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Progress Cards */}
       <div className="space-y-4">

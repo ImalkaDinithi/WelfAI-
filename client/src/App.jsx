@@ -26,11 +26,11 @@ import LifestylePlanReview from './pages/admin/LifestylePlanReview';
 import LifestylePlanForm from './pages/applicant/LifestylePlanForm';
 import PlanEvidenceUpload from './pages/applicant/PlanEvidenceUpload';
 import PlanProgressReview from './pages/admin/PlanProgressReview';
+import WaitingListQueue from './pages/admin/WaitingListQueue';
+import WaitingListReview from './pages/admin/WaitingListReview';
+import SuperAdminDashboard from './pages/superadmin/SuperAdminDashboard';
 
 import ProtectedRoute from './components/ProtectedRoute';
-
-// Placeholder superadmin dashboard — replace when building Superadmin module
-const SuperAdminDashboard = () => <div className="p-8 font-serif text-xl">Super Admin Dashboard Placeholder</div>;
 
 function App() {
   return (
@@ -124,6 +124,8 @@ function App() {
             <Route path="lifestyle-plan-queue/:id" element={<LifestylePlanReview />} />
             <Route path="lifestyle-plan-queue/:id/progress" element={<PlanProgressReview />} />
             <Route path="applications" element={<ApplicationsOverview />} />
+            <Route path="waiting-list-queue" element={<WaitingListQueue />} />
+            <Route path="waiting-list-queue/:id" element={<WaitingListReview />} />
             <Route path="profile" element={<ProfilePage />} />
           </Route>
 

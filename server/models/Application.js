@@ -479,6 +479,48 @@ const appealSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const waitingListInfoSchema = new mongoose.Schema(
+  {
+    reason: {
+      type: String,
+      required: [true, 'Disqualification reason is required'],
+      trim: true,
+    },
+    disqualifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    disqualifiedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    resolution: {
+      type: String,
+      enum: {
+        values: ['Reinstated', 'Rejected'],
+        message: '{VALUE} is not a valid waiting list resolution',
+      },
+      default: null,
+    },
+    resolvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    resolvedNotes: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    resolvedAt: {
+      type: Date,
+      default: null,
+    },
+  },
+  { _id: false }
+);
+
 // ---------------------------------------------------------------------------
 // Lifestyle Improvement Plan — Phase 1 Schema
 // ---------------------------------------------------------------------------
@@ -642,7 +684,7 @@ const applicationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Appealed'],
+        values: ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected', 'Appealed', 'Waiting List'],
         message: '{VALUE} is not a valid status',
       },
       default: 'Draft',
@@ -684,6 +726,12 @@ const applicationSchema = new mongoose.Schema(
     // Lifestyle improvement plan — undefined until applicant submits (mirrors appeal pattern)
     lifestylePlan: {
       type: lifestylePlanSchema,
+      default: undefined,
+    },
+    // Note: A new disqualification cycle overwrites the previous waitingListInfo object
+    // rather than keeping a full history array. This is a known scope limitation.
+    waitingListInfo: {
+      type: waitingListInfoSchema,
       default: undefined,
     },
   },

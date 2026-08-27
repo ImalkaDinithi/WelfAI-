@@ -15,6 +15,9 @@ const {
   getMlServiceHealth,
   getPlanProgress,
   reviewPlanPeriod,
+  disqualifyApplication,
+  getWaitingListApplications,
+  resolveWaitingList,
 } = require('../controllers/adminController');
 
 // All admin routes require authentication and 'admin' role
@@ -39,6 +42,15 @@ router.patch('/applications/:id/review-start', markUnderReview);
 
 // @route   PATCH /api/admin/applications/:id/review
 router.patch('/applications/:id/review', reviewApplication);
+
+// @route   PATCH /api/admin/applications/:id/disqualify
+router.patch('/applications/:id/disqualify', disqualifyApplication);
+
+// @route   GET /api/admin/waiting-list
+router.get('/waiting-list', getWaitingListApplications);
+
+// @route   PATCH /api/admin/waiting-list/:id/resolve
+router.patch('/waiting-list/:id/resolve', resolveWaitingList);
 
 // @route   GET /api/admin/appeals
 router.get('/appeals', getAppealedApplications);

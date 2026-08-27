@@ -445,6 +445,7 @@ const getPlanProgress = asyncHandler(async (req, res) => {
 
   const lpObj = lp.toObject();
   lpObj.periods = periods;
+  lpObj.applicationStatus = application.status;
 
   res.json({
     success: true,
@@ -524,6 +525,131 @@ const reviewPlanPeriod = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Disqualify approved application and move to waiting list
+// @route   PATCH /api/admin/applications/:id/disqualify
+// @access  Private/Admin
+const disqualifyApplication = asyncHandler(async (req, res) => {
+  const { reason } = req.body;
+
+  if (!reason || !reason.trim()) {
+    res.status(400);
+    throw new Error('Disqualification reason explanation is required');
+  }
+
+  const application = await Application.findById(req.params.id);
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  if (application.status !== 'Approved') {
+    res.status(400);
+    throw new Error('Only Approved applications can be disqualified and moved to the waiting list');
+  }
+
+  // Update status and populate waitingListInfo
+  application.status = 'Waiting List';
+  application.waitingListInfo = {
+    reason: reason.trim(),
+    disqualifiedBy: req.user.userId,
+    disqualifiedAt: new Date(),
+    resolution: null,
+    resolvedBy: null,
+    resolvedNotes: '',
+    resolvedAt: null,
+  };
+
+  await application.save();
+
+  res.json({
+    success: true,
+    message: 'Application disqualified and moved to the waiting list',
+    data: application,
+  });
+});
+
+// @desc    Get waiting list applications
+// @route   GET /api/admin/waiting-list
+// @access  Private/Admin
+const getWaitingListApplications = asyncHandler(async (req, res) => {
+  const filter = req.query.filter || 'active';
+  let query = {};
+  let sort = { 'waitingListInfo.disqualifiedAt': -1 }; // newest-first default
+
+  if (filter === 'reinstated') {
+    query = { 'waitingListInfo.resolution': 'Reinstated' };
+  } else if (filter === 'rejected') {
+    query = { 'waitingListInfo.resolution': 'Rejected' };
+  } else if (filter === 'all') {
+    query = { waitingListInfo: { $exists: true } };
+  } else {
+    // default to 'active'
+    query = { status: 'Waiting List' };
+    sort = { 'waitingListInfo.disqualifiedAt': 1 }; // oldest-first for active
+  }
+
+  const applications = await Application.find(query)
+    .populate('applicant', 'fullName email nic phone district')
+    .sort(sort);
+
+  res.json({
+    success: true,
+    count: applications.length,
+    data: applications,
+  });
+});
+
+// @desc    Resolve waiting list application (Reinstate or Reject)
+// @route   PATCH /api/admin/waiting-list/:id/resolve
+// @access  Private/Admin
+const resolveWaitingList = asyncHandler(async (req, res) => {
+  const { decision, resolvedNotes } = req.body;
+
+  if (!['Reinstated', 'Rejected'].includes(decision)) {
+    res.status(400);
+    throw new Error('Invalid resolution decision. Must be Reinstated or Rejected');
+  }
+
+  if (!resolvedNotes || !resolvedNotes.trim()) {
+    res.status(400);
+    throw new Error('Notes explanation is required to resolve a waiting list case');
+  }
+
+  const application = await Application.findById(req.params.id);
+
+  if (!application) {
+    res.status(404);
+    throw new Error('Application not found');
+  }
+
+  if (application.status !== 'Waiting List' || !application.waitingListInfo) {
+    res.status(400);
+    throw new Error('Only applications currently on the Waiting List can be resolved');
+  }
+
+  // Update waitingListInfo resolution fields
+  application.waitingListInfo.resolution = decision;
+  application.waitingListInfo.resolvedBy = req.user.userId;
+  application.waitingListInfo.resolvedNotes = resolvedNotes.trim();
+  application.waitingListInfo.resolvedAt = new Date();
+
+  // Set top-level status
+  if (decision === 'Reinstated') {
+    application.status = 'Approved';
+  } else {
+    application.status = 'Rejected';
+  }
+
+  await application.save();
+
+  res.json({
+    success: true,
+    message: `Waiting list application resolved as ${decision.toLowerCase()} successfully`,
+    data: application,
+  });
+});
+
 // ---------------------------------------------------------------------------
 
 module.exports = {
@@ -540,4 +666,7 @@ module.exports = {
   getMlServiceHealth,
   getPlanProgress,
   reviewPlanPeriod,
+  disqualifyApplication,
+  getWaitingListApplications,
+  resolveWaitingList,
 };

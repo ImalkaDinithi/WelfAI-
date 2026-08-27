@@ -74,38 +74,70 @@ const MyApplicationPage = () => {
       </div>
 
       {/* Rejected status callout */}
-      {application.status === 'Rejected' && (
-        <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm space-y-3">
-          <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
-            <span>❌</span>
-            <span>Admin Review Notes / Determination Explanation:</span>
+      {application.status === 'Rejected' && (() => {
+        const isWaitingListReject = application.waitingListInfo && application.waitingListInfo.resolution === 'Rejected';
+        const notes = isWaitingListReject ? application.waitingListInfo.resolvedNotes : application.reviewNotes;
+        const notesTitle = isWaitingListReject ? 'Benefit Disqualification & Rejection Notes:' : 'Admin Review Notes / Determination Explanation:';
+        return (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-5 shadow-sm space-y-3">
+            <span className="text-xs font-semibold text-red-800 flex items-center space-x-1">
+              <span>❌</span>
+              <span>{notesTitle}</span>
+            </span>
+            <p className="text-xs text-red-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-red-200">
+              {notes || 'No specific review notes provided by reviewer.'}
+            </p>
+
+            {/* Appeal Ruling outcome if present */}
+            {application.appeal?.decision && (
+              <div className="pt-2 border-t border-red-200">
+                <span className="text-xs font-bold text-red-900 block mb-1">
+                  Appeal Determination: Upheld Rejection
+                </span>
+                <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-3 rounded-lg border border-red-200">
+                  {application.appeal.reviewNotes}
+                </p>
+              </div>
+            )}
+
+            {!application.appeal && (
+              <div className="pt-1">
+                <Link
+                  to="/appeal"
+                  className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
+                >
+                  Appeal This Decision →
+                </Link>
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* Waiting List status callout */}
+      {application.status === 'Waiting List' && (
+        <div className="rounded-xl border border-amber-250 bg-amber-50 p-5 shadow-sm space-y-3">
+          <span className="text-xs font-semibold text-amber-805 flex items-center space-x-1.5">
+            <span>⚠️</span>
+            <span>Benefit Placed on Waiting List:</span>
           </span>
-          <p className="text-xs text-red-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-red-200">
-            {application.reviewNotes || 'No specific review notes provided by reviewer.'}
+          <div className="text-xs text-amber-900 font-medium bg-white/90 p-3 rounded-lg border border-amber-200">
+            <p className="font-semibold">Reason: {application.waitingListInfo?.reason}</p>
+            {application.waitingListInfo?.disqualifiedAt && (
+              <p className="text-[10px] text-slate-500 mt-1">Disqualified on: {new Date(application.waitingListInfo.disqualifiedAt).toLocaleDateString('en-LK')}</p>
+            )}
+          </div>
+          <p className="text-xs text-amber-700 font-medium">
+            Continue submitting evidence for your improvement plan to be considered for reinstatement.
           </p>
-
-          {/* Appeal Ruling outcome if present */}
-          {application.appeal?.decision && (
-            <div className="pt-2 border-t border-red-200">
-              <span className="text-xs font-bold text-red-900 block mb-1">
-                Appeal Determination: Upheld Rejection
-              </span>
-              <p className="text-xs text-red-800 whitespace-pre-wrap font-medium bg-red-100/60 p-3 rounded-lg border border-red-200">
-                {application.appeal.reviewNotes}
-              </p>
-            </div>
-          )}
-
-          {!application.appeal && (
-            <div className="pt-1">
-              <Link
-                to="/appeal"
-                className="inline-flex items-center rounded-lg bg-red-800 px-4 py-2 text-xs font-semibold text-white transition hover:bg-red-900 shadow-sm"
-              >
-                Appeal This Decision →
-              </Link>
-            </div>
-          )}
+          <div>
+            <Link
+              to="/lifestyle-plan/evidence"
+              className="inline-flex items-center rounded-lg bg-teal-900 px-4 py-2 text-xs font-semibold text-white transition hover:bg-teal-805 shadow-sm"
+            >
+              Upload Plan Evidence →
+            </Link>
+          </div>
         </div>
       )}
 
@@ -146,7 +178,15 @@ const MyApplicationPage = () => {
                 : 'Application Approved'}
             </span>
           </span>
-          {application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
+          {application.waitingListInfo?.resolution === 'Reinstated' ? (
+            <div className="space-y-1">
+              <span className="text-xs font-semibold text-emerald-900 block">Benefit Reinstated Notes:</span>
+              <div className="text-xs text-emerald-900 bg-white/90 p-3 rounded border border-emerald-200 space-y-1">
+                <p>Your benefit was reinstated on {new Date(application.waitingListInfo.resolvedAt).toLocaleDateString('en-LK')}.</p>
+                <p className="font-medium">Feedback: {application.waitingListInfo.resolvedNotes}</p>
+              </div>
+            </div>
+          ) : application.appeal?.decision === 'Approved' && application.appeal?.reviewNotes ? (
             <div className="space-y-1">
               <span className="text-xs font-semibold text-emerald-900 block">Appeals Committee Determination Notes:</span>
               <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">
@@ -156,7 +196,7 @@ const MyApplicationPage = () => {
           ) : application.reviewNotes ? (
             <div className="space-y-1">
               <span className="text-xs font-semibold text-emerald-900 block">Admin Review Notes / Determination Explanation:</span>
-              <p className="text-xs text-emerald-900 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">
+              <p className="text-xs text-emerald-905 whitespace-pre-wrap font-medium bg-white/90 p-3 rounded-lg border border-emerald-200">
                 {application.reviewNotes}
               </p>
             </div>

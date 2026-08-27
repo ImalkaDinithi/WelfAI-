@@ -75,3 +75,25 @@ export const reviewPlanPeriod = async (id, periodLabel, reviewNotes) => {
   });
   return data;
 };
+
+export const disqualifyApplication = async (id, reason) => {
+  const { data } = await axiosInstance.patch(`/admin/applications/${id}/disqualify`, {
+    reason,
+  });
+  return data;
+};
+
+export const getWaitingListApplications = async (filter = 'active') => {
+  const { data } = await axiosInstance.get('/admin/waiting-list', {
+    params: { filter },
+  });
+  return data;
+};
+
+export const resolveWaitingList = async (id, decision, resolvedNotes) => {
+  const { data } = await axiosInstance.patch(`/admin/waiting-list/${id}/resolve`, {
+    decision,
+    resolvedNotes,
+  });
+  return data;
+};
