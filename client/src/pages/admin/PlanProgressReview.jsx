@@ -137,7 +137,7 @@ const PlanProgressReview = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 p-6 sm:p-8 text-white shadow-sm">
+      <div className="rounded-2xl bg-linear-to-r from-teal-900 via-teal-800 to-slate-900 p-6 sm:p-8 text-white shadow-sm">
         <Link
           to={`/admin/lifestyle-plan-queue/${id}`}
           className="text-xs text-teal-300 hover:text-white mb-3 inline-flex items-center space-x-1"
@@ -268,7 +268,7 @@ const PlanProgressReview = () => {
                           className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 p-3 text-xs"
                         >
                           <div>
-                            <span className="font-semibold text-slate-800 block truncate max-w-[200px]" title={doc.fileName}>
+                            <span className="font-semibold text-slate-800 block truncate max-w-50" title={doc.fileName}>
                               {doc.fileName}
                             </span>
                             <span className="text-[10px] text-slate-500 uppercase tracking-wide">
