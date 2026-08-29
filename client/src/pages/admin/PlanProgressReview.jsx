@@ -177,7 +177,7 @@ const PlanProgressReview = () => {
               <button
                 type="button"
                 onClick={() => setShowDisqualifyForm(!showDisqualifyForm)}
-                className="rounded-lg bg-red-750 px-4 py-2.5 text-xs font-semibold text-white hover:bg-red-800 transition shadow-sm shrink-0"
+                className="rounded-lg bg-red-750 px-4 py-2.5 text-xs font-semibold text-slate-800 hover:bg-red-800 transition shadow-sm shrink-0"
               >
                 {showDisqualifyForm ? 'Cancel Disqualification' : 'Disqualify from Benefit'}
               </button>
