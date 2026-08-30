@@ -29,6 +29,7 @@ import PlanProgressReview from './pages/admin/PlanProgressReview';
 import WaitingListQueue from './pages/admin/WaitingListQueue';
 import WaitingListReview from './pages/admin/WaitingListReview';
 import SuperAdminDashboard from './pages/superadmin/SuperAdminDashboard';
+import SuperAdminProfile from './pages/superadmin/SuperAdminProfile';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -129,12 +130,20 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
           </Route>
 
-          {/* Super Admin Dashboard Route */}
+          {/* Super Admin Dashboard Routes */}
           <Route
             path="/superadmin/dashboard"
             element={
               <ProtectedRoute allowedRoles={['superadmin']}>
                 <SuperAdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/superadmin/profile"
+            element={
+              <ProtectedRoute allowedRoles={['superadmin']}>
+                <SuperAdminProfile />
               </ProtectedRoute>
             }
           />
